@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:selfstudy/shorts/video_player.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:selfstudy/shorts/video_player.dart';
 import 'package:selfstudy/module/data_module.dart';
+import 'package:selfstudy/shorts/youtub_player.dart';
 
 final List<String> VideoUrl = <String>[
   'https://sewabhartidabra.in/Self_Study/GK/Video/Gk2.mp4',
@@ -53,7 +54,7 @@ class CreateSList extends State<ShortsList>{
   Future<void> fetchProducts() async {
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GID : ${widget.GroupID}");
     final body = {
-      "ACTION": "2",
+      "ACTION": "4",
       "ROWNO": StartRowNo,
       "GROUPID": widget.GroupID,
     };
@@ -88,15 +89,15 @@ class CreateSList extends State<ShortsList>{
           child: ListView(
             children: [
               Container(
-                height: 530,
-                width: 300,
+                height: 777,
+                width: 290,
                 child: ListView.builder(
                   controller: LVcontroller,
                   itemCount: VDModel.isEmpty ? 0 : VDModel.length,
                   itemBuilder: (BuildContext context, int index) =>
                       Container(
-                        width: 300,
-                        height: 530,
+                        width: 290,
+                        height: 777,
                         alignment: Alignment.center,
 
                         child: Container(
@@ -104,7 +105,7 @@ class CreateSList extends State<ShortsList>{
                               "keydata$index",
                             ),
 
-                            child: MyVideoPlayer(
+                            child: YouTubePlayer(
                               VideoUrl: VDModel[index].VUrl,
                               context: context,
                             )

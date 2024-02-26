@@ -125,7 +125,7 @@ class ShortsType extends StatelessWidget {
                 // ScaffoldMessenger.of(context).showSnackBar(
                 //     SnackBar(content: Text('Clicked on Math Tricks!')));
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ShortsList(clientName: entries[1], GroupID: 3, context: context)));
+                    builder: (context) => ShortsList(clientName: entries[1], GroupID: 2, context: context)));
 
               },
               child: Container(
@@ -147,7 +147,7 @@ class ShortsType extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ShortsList(clientName: entries[2], GroupID: 2, context: context)));
+                    builder: (context) => ShortsList(clientName: entries[2], GroupID: 3, context: context)));
                 // ScaffoldMessenger.of(context).showSnackBar(
                 //     SnackBar(content: Text('Clicked on Univeersal!')));
               },
