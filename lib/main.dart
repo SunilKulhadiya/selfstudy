@@ -62,7 +62,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
   List _pages = [
     Home(),
     ShortsType(),
@@ -120,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   label: 'shorts',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.picture_as_pdf),
+                  icon: Icon(Icons.file_open_sharp),
                   label: 'Read',
                 ),
               ],
