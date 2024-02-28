@@ -71,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List _pagesTitle = [
     "Home",
     "Shorts",
-    "Read",
+    "Notes",
   ];
   final ScrollController _homeController = ScrollController();
 
@@ -121,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.file_open_sharp),
-                  label: 'Read',
+                  label: 'Notes',
                 ),
               ],
               currentIndex: _selectedIndex,
@@ -153,11 +153,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
             ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: _incrementCounter,
-              tooltip: 'Increment',
-              child: ImageIcon(AssetImage("assets/images/chat3d.png"), size: 30, color: Colors.cyan,),
-            ),
+
+            // floatingActionButton: FloatingActionButton(
+            //   onPressed: _incrementCounter,
+            //   tooltip: 'Increment',
+            //   child: ImageIcon(AssetImage("assets/images/chat3d.png"), size: 30, color: Colors.cyan,),
+            // ),
 
             // This trailing comma makes auto-formatting nicer for build methods.
           ),

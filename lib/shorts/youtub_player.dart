@@ -9,10 +9,12 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class YouTubePlayer extends StatefulWidget {
   final String VideoUrl;
+  final int AutoPlay;
   final BuildContext context;
 
   const YouTubePlayer({super.key,
     required this.VideoUrl,
+    required this.AutoPlay,
     required this.context});
 
   @override
@@ -41,22 +43,43 @@ class _MySpecificPageState extends State<YouTubePlayer> {
   @override
   void initState() {
     super.initState();
-    _controller = YoutubePlayerController(
-      initialVideoId: widget.VideoUrl,
-      flags: const YoutubePlayerFlags(
-        mute: false,
-        autoPlay: true,
-        disableDragSeek: false,
-        loop: false,
-        isLive: false,
-        forceHD: false,
-        enableCaption: true,
-      ),
-    )..addListener(listener);
-    _idController = TextEditingController();
-    _seekToController = TextEditingController();
-    _videoMetaData = const YoutubeMetaData();
-    _playerState = PlayerState.unknown;
+    if(widget.AutoPlay == 0) {
+      _controller = YoutubePlayerController(
+        initialVideoId: widget.VideoUrl,
+        flags: const YoutubePlayerFlags(
+          mute: false,
+          autoPlay: false,
+          disableDragSeek: false,
+          loop: false,
+          isLive: false,
+          forceHD: false,
+          enableCaption: true,
+        ),
+      )
+        ..addListener(listener);
+      _idController = TextEditingController();
+      _seekToController = TextEditingController();
+      _videoMetaData = const YoutubeMetaData();
+      _playerState = PlayerState.unknown;
+    }else{
+      _controller = YoutubePlayerController(
+        initialVideoId: widget.VideoUrl,
+        flags: const YoutubePlayerFlags(
+          mute: false,
+          autoPlay: true,
+          disableDragSeek: false,
+          loop: false,
+          isLive: false,
+          forceHD: false,
+          enableCaption: true,
+        ),
+      )
+        ..addListener(listener);
+      _idController = TextEditingController();
+      _seekToController = TextEditingController();
+      _videoMetaData = const YoutubeMetaData();
+      _playerState = PlayerState.unknown;
+    }
   }
 
   void listener() {

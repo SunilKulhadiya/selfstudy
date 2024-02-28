@@ -16,11 +16,14 @@ final List<String> VideoUrl = <String>[
 class ShortsList extends StatefulWidget {
   final String clientName;
   final int GroupID;
+  final int Action;
   final BuildContext context;
 
   const ShortsList({super.key,
     required this.clientName,
-    required this.GroupID, required this.context});
+    required this.GroupID,
+    required this.Action,
+    required this.context});
 
   @override
   State<ShortsList> createState() => CreateSList();
@@ -40,9 +43,6 @@ class CreateSList extends State<ShortsList>{
     fetchProducts();
   }
   void handleScrolling() {
-    print("-----------<<<<<<<<<<<<<<< StartRowNo ${StartRowNo}");
-    print("-----------<<<<<<<<<<<<<<< LVcontroller.offset ${LVcontroller.offset}");
-    print("-----------<<<<<<<<<<<<<<< LVcontroller.position.maxScrollExtent ${LVcontroller.position.maxScrollExtent}");
     if (LVcontroller.position.pixels == LVcontroller.position.maxScrollExtent) {
       print("-----------<<<<<<<<<<<<<<< StartRowNo ---------------------------------");
       setState(() {
@@ -54,7 +54,7 @@ class CreateSList extends State<ShortsList>{
   Future<void> fetchProducts() async {
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GID : ${widget.GroupID}");
     final body = {
-      "ACTION": "4",
+      "ACTION": widget.Action,
       "ROWNO": StartRowNo,
       "GROUPID": widget.GroupID,
     };
@@ -72,7 +72,7 @@ class CreateSList extends State<ShortsList>{
       setState(() {
         VDModel = jsonData.map((data) => VideoDataModel.fromJson(data)).toList();
       });
-      print("--------------------VDModel : ${VDModel[0].VUrl}");
+      print("--------------------VDModel : ${VDModel[0].Url}");
     } else {
       // Handle error if needed
     }
@@ -106,7 +106,8 @@ class CreateSList extends State<ShortsList>{
                             ),
 
                             child: YouTubePlayer(
-                              VideoUrl: VDModel[index].VUrl,
+                              VideoUrl: VDModel[index].Url,
+                              AutoPlay: 1,
                               context: context,
                             )
                         ),

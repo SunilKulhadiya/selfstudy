@@ -13,7 +13,7 @@ class ShortsType extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+      color: Colors.grey,
       child: Column(
         children: <Widget>[
           Container(
@@ -102,7 +102,10 @@ class ShortsType extends StatelessWidget {
                 // ScaffoldMessenger.of(context).showSnackBar(
                 // SnackBar(content: Text('Clicked on GK!')));
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ShortsList(clientName: entries[0], GroupID: 1, context: context)));
+                    builder: (context) =>
+                        ShortsList(clientName: entries[1], GroupID: 1,
+                            Action: 5,
+                            context: context)));
               },
               child: Container(
                 child: Card(
@@ -125,7 +128,10 @@ class ShortsType extends StatelessWidget {
                 // ScaffoldMessenger.of(context).showSnackBar(
                 //     SnackBar(content: Text('Clicked on Math Tricks!')));
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ShortsList(clientName: entries[1], GroupID: 2, context: context)));
+                    builder: (context) =>
+                        ShortsList(clientName: entries[1], GroupID: 2,
+                            Action: 5,
+                            context: context)));
 
               },
               child: Container(
@@ -147,7 +153,10 @@ class ShortsType extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ShortsList(clientName: entries[2], GroupID: 3, context: context)));
+                    builder: (context) =>
+                        ShortsList(clientName: entries[1], GroupID: 3,
+                            Action: 5,
+                            context: context)));
                 // ScaffoldMessenger.of(context).showSnackBar(
                 //     SnackBar(content: Text('Clicked on Univeersal!')));
               },

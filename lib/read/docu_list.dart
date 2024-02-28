@@ -57,7 +57,7 @@ class CreateSList extends State<DocumentList>{
   Future<void> fetchProducts() async {
     //print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GID : ${}");
     final body = {
-      "ACTION": "3",
+      "ACTION": "6",
       "ROWNO": StartRowNo,
       "GROUPID": "0", //widget.GroupID,
     };
@@ -75,7 +75,7 @@ class CreateSList extends State<DocumentList>{
       setState(() {
         PdfList = jsonData.map((data) => VideoDataModel.fromJson(data)).toList();
       });
-      print("--------------------VDModel : ${PdfList[0].VUrl}");
+      print("--------------------VDModel : ${PdfList[0].Url}");
     } else {
       // Handle error if needed
     }
@@ -87,6 +87,12 @@ class CreateSList extends State<DocumentList>{
     return Scaffold(
       body: Column(
           children: [
+            Container(
+              height: 700,
+              color: Colors.grey,
+              child: Container(
+                child: Column(
+                  children: [
             Container(
               height: 200,
               child: CarouselSlider(
@@ -203,7 +209,7 @@ class CreateSList extends State<DocumentList>{
                                   // launch('https://drive.google.com/viewerng/viewer?embedded=true&url='+'https://sewabhartidabra.in/Self_Study/GK/Compound_Interest_QA.pdf');
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) =>
-                                          MyPDFViewer(PdfUrl: PdfList[index].VUrl,
+                                          MyPDFViewer(PdfUrl: PdfList[index].Url,
                                               PdfTitle: PdfList[index].title, context: context)));
                                 },
                                 child: Card(
@@ -224,6 +230,13 @@ class CreateSList extends State<DocumentList>{
                   ),
                 )
             ),
+
+
+                  ],
+                ),
+              ),
+            )
+
           ]
       ),
     );

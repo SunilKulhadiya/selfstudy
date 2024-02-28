@@ -1,9 +1,18 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../module/data_module.dart';
+import 'package:selfstudy/shorts/youtub_player.dart';
+
+import '../read/pdf_viewer.dart';
+import '../shorts/shorts_list.dart';
+import 'package:selfstudy/home/google_search_view.dart';
+
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -14,24 +23,25 @@ class Home extends StatefulWidget {
 
 class CreateHomePage extends State<Home>{
   List<VideoDataModel> ShortsData = [];
+  List<VideoDataModel> DocData = [];
+  final MySearchValue = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    print("--------------------Home : ");
     fetchProducts();
   }
   Future<void> fetchProducts() async {
-    final body = {
+    var body = {
       "ACTION": "2",
       "ROWNO": 0,
       "GROUPID": 0,
     };
-    final jsonBody = json.encode(body);
+    var jsonBody = json.encode(body);
 
     // you can replace your api link with this link
-    final response = await
-    http.post(Uri.parse('https://sewabhartidabra.in/APIs/Fetch_SelfStudy_HomeData.php'),
+    var response = await
+    http.post(Uri.parse('https://sewabhartidabra.in/APIs/Fetch_SelfStudy.php'),
         body: jsonBody,
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json',}
     );
@@ -45,16 +55,101 @@ class CreateHomePage extends State<Home>{
     } else {
       // Handle error if needed
     }
+    //-------------------------------
+    body = {
+      "ACTION": "3",
+      "ROWNO": 0,
+      "GROUPID": 0,
+    };
+    jsonBody = json.encode(body);
+
+    // you can replace your api link with this link
+    response = await
+    http.post(Uri.parse('https://sewabhartidabra.in/APIs/Fetch_SelfStudy.php'),
+        body: jsonBody,
+        headers: {'Accept': 'application/json', 'Content-Type': 'application/json',}
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> jsonData = json.decode(response.body);
+      print("--------------------Home : ${jsonData}");
+      setState(() {
+        DocData = jsonData.map((data) => VideoDataModel.fromJson(data)).toList();
+      });
+      print("-------------------Home-Doc : ${DocData}");
+    } else {
+      // Handle error if needed
+    }
+
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    MySearchValue.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final double W = MediaQuery.of(context).size.width;
+    print("----------------------------------------W : ${W}");
     return Scaffold(
       body: Container(
         color: Colors.grey,
         child: SafeArea(
             child: CustomScrollView(
               slivers: [
+                SliverToBoxAdapter(
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.fromLTRB(5, 10, 0, 0),
+                          alignment: Alignment.bottomLeft,
+                          height: 50,
+                          width: W - 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            color: Colors.white
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: W - 110,
+                                margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                child: TextField(
+                                  controller: MySearchValue,
+                                  decoration: InputDecoration(
+                                    hintStyle: TextStyle(fontSize: 17),
+                                    hintText: 'Search.....',
+                                    //suffixIcon: Icon(Icons.search),
+                                    border: InputBorder.none,
+                                  ),
+                                  onChanged: (text) {
+                                    print('First text field: $text (${text.characters.length})');
+                                  },
+                                ),
+                              ),
+                              Container(
+                                width: 50,
+                                  alignment: Alignment.centerRight,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            GoogleSearchView(MySearch: MySearchValue.text,
+                                            context: context)));
+                                  },
+
+                                  child: Icon(Icons.search, size: 40,),
+                                )
+
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                ),
 
                 SliverToBoxAdapter(
                   child: Column(
@@ -148,21 +243,18 @@ class CreateHomePage extends State<Home>{
                 ),
 
         SliverToBoxAdapter(
-
           child: Column(
             children: [
               Container(
                 margin: EdgeInsets.fromLTRB(5, 10, 0, 0),
                 alignment: Alignment.bottomLeft,
-
                 child: Text('Shorts',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),),
-
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
               ),
             ],
-
           )
         ),
+
             SliverGrid(
                   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 130.0,
@@ -172,18 +264,127 @@ class CreateHomePage extends State<Home>{
                   ),
                   delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
-                      return Container(
-                        margin: EdgeInsets.all(7),
-                        alignment: Alignment.center,
-                        color: Colors.blue,
-                        child: Text(ShortsData[index].title),
+                      return Stack(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.blue,
+                              border: Border.all(
+                                color: Color.fromRGBO(11, 86, 183, 50),
+                                width: 3.0,
+                              )
+                            ),
+                            margin: EdgeInsets.all(5),
+                            alignment: Alignment.center,
+                            child: YouTubePlayer(
+                              VideoUrl: ShortsData[index].Url,
+                              AutoPlay: 0,
+                              context: context,
+                            ),
+                          ),
+                        ],
                       );
-                    },
+
+                          },
                     childCount: ShortsData.length,
                   ),
                 ),
+                SliverToBoxAdapter(
+                    child: Column(
+                      children: [
+                        Container(
+                          alignment: Alignment.bottomRight,
+                          child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              margin: EdgeInsets.fromLTRB(0, 5, 5, 0),
+                              alignment: Alignment.center,
+                              width: 100,
+                            child: GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                  ShortsList(clientName: "Shorts",
+                                      GroupID: 0,
+                                      Action: 2,
+                                      context: context)));
+                                },
+                              child: Padding(
+                                padding: EdgeInsets.all(3),
+                                child: Text('Full Screen',
+                                  style: TextStyle(fontWeight: FontWeight.bold,
+                                    fontSize: 16,),),                          )
+                          ),
+                          ),
+                        )
+                      ],
+                    )
+                ),
 
+                SliverToBoxAdapter(
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.fromLTRB(5, 10, 0, 0),
+                          alignment: Alignment.bottomLeft,
+                          child: Text('Notes',
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
+                        ),
+                      ],
+                    )
+                ),
+                SliverGrid(
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 130.0,
+                    mainAxisSpacing: 5.0,
+                    crossAxisSpacing: 8.0,
+                    childAspectRatio: 1.0,
+                  ),
+                  delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                      return Stack(
+                        children: [
+                          Container(
+                            // decoration: BoxDecoration(
+                            //     color: Colors.white,
+                            //     border: Border.all(
+                            //       color: Color.fromRGBO(11, 86, 183, 50),
+                            //       width: 1.0,
+                            //     )
+                            // ),
+                            margin: EdgeInsets.all(5),
+                            alignment: Alignment.center,
+                          child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    MyPDFViewer(PdfUrl: DocData[index].Url,
+                                        PdfTitle: DocData[index].title, context: context)));
+                          },
 
+                          child: Image.network(DocData[index].ImgUrl, fit: BoxFit.cover,),
+                          ),
+                          ),
+                        ],
+                      );
+
+                    },
+                    childCount: DocData.length,
+                  ),
+                ),
+
+                SliverToBoxAdapter(
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                          alignment: Alignment.bottomLeft,
+                        ),
+                      ],
+                    )
+                ),
 
               ],
             )),
