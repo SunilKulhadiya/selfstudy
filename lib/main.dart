@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_material_symbols/flutter_material_symbols.dart';
+//import 'package:splashscreen/splashscreen.dart';
 
 import 'package:selfstudy/shorts/shorts_type.dart';
 import 'package:selfstudy/home/home.dart';

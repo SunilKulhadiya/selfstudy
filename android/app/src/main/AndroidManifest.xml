@@ -7,7 +7,7 @@
    <application
         android:label="selfstudy"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ss_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"
