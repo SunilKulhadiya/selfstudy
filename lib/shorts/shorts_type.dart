@@ -103,7 +103,7 @@ class ShortsType extends StatelessWidget {
                 // SnackBar(content: Text('Clicked on GK!')));
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) =>
-                        ShortsList(clientName: entries[1], GroupID: 1,
+                        ShortsList(clientName: entries[0], GroupID: 1,
                             Action: 5,
                             context: context)));
               },
@@ -154,7 +154,7 @@ class ShortsType extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) =>
-                        ShortsList(clientName: entries[1], GroupID: 3,
+                        ShortsList(clientName: entries[2], GroupID: 3,
                             Action: 5,
                             context: context)));
                 // ScaffoldMessenger.of(context).showSnackBar(

@@ -39,6 +39,7 @@ class CreateSList extends State<ShortsList>{
 
   ScrollController LVcontroller = ScrollController();
   int StartRowNo = 0;
+  late int VDResponseCode = 200;
   late int drp1;
   late int drpAuthor1;
   //late String SelectedSbuTitle;
@@ -60,7 +61,7 @@ class CreateSList extends State<ShortsList>{
     LVcontroller.addListener(handleScrolling);
     print("-----------<<<<<<<<<<<<<<< &&&&&&&&&&&&&&&&&& ${LVcontroller}");
     fetchProducts(Action: widget.Action, StartRN: StartRowNo,
-        GrpID: widget.GroupID, SubT: "");
+        GrpID: widget.GroupID, SubT: "", Auth: "");
     fetchSingleTimeData();
     // setState(() {
     //   VDModel =  ApiRequest.ShortList_Fetch(url: "Fetch_SelfStudy",
@@ -88,10 +89,13 @@ class CreateSList extends State<ShortsList>{
       print("------Sub title--------::::::::::::::::------response.body : ${response.body}");
       List<dynamic> jsonData = json.decode(response.body);
       print("--------------------jsonData : ${jsonData}");
-      setState(() {
-        VSubTitle = jsonData.map((data) => SubTitleDataModel.fromJson(data)).toList();
-        //VSubTitle.add(VDModel as VideoDataModel);
-      });
+      SubTitleDataModel subTitle = new SubTitleDataModel(SubTitle: "Select you like");
+      VSubTitle.add(subTitle);
+      for(var h in jsonData) {
+        print("--------------------***************************************** h : ${h}");
+        SubTitleDataModel subTitle = new SubTitleDataModel(SubTitle: h['sub_title']);
+        VSubTitle.add(subTitle);
+      }
       print("--------------------SubTitle : ${VSubTitle}");
     } else {
       print("????????????????????????????  Error GID : ${widget.GroupID}");
@@ -115,12 +119,14 @@ class CreateSList extends State<ShortsList>{
     if (response1.statusCode == 200) {
       print("--------------::::::::::::::::------response.body : ${response1.body}");
       List<dynamic> jsonData1 = json.decode(response1.body);
-      print("--------------------jsonData : ${jsonData1}");
-      setState(() {
-        AuthTeacher = jsonData1.map((data1) => AuthorDataModel.fromJson(data1)).toList();
-        //VSubTitle.add(VDModel as VideoDataModel);
-      });
-      print("--------------------AuthTeacher : ${AuthTeacher}");
+
+      AuthorDataModel authTitle = new AuthorDataModel(Author: "Select Teacher");
+      AuthTeacher.add(authTitle);
+      for(var h in jsonData1) {
+        AuthorDataModel authTitle = new AuthorDataModel(Author: h['author']);
+        AuthTeacher.add(authTitle);
+        print("--------------------********************************>>>>>>>>>>        AuthTeacher ********* h : ${AuthTeacher}");
+      }
     } else {
       print("????????????????????????????  Error GID : ${widget.GroupID}");
       print("????????????????????????????  Error Action : ${widget.Action}");
@@ -137,7 +143,7 @@ class CreateSList extends State<ShortsList>{
     }
   }
   Future<void> fetchProducts({required Action,
-    required StartRN, required GrpID, required SubT}) async {
+    required StartRN, required GrpID, required SubT, required Auth}) async {
     print(">>>>>>>>>>>>>>>>fetchProducts>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     print(">>>>>>>>>>>>>>>>fetchProducts>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GID : ${GrpID}");
     print(">>>>>>>>>>>>>>>>fetchProducts>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Action : ${Action}");
@@ -145,7 +151,8 @@ class CreateSList extends State<ShortsList>{
       "ACTION": Action,
       "ROWNO": StartRN,
       "GROUPID": GrpID,
-      "SubTitle": SubT
+      "SubTitle": SubT,
+      "AUTHORNAME": Auth,
     };
     final jsonBody = json.encode(body);
 
@@ -155,18 +162,26 @@ class CreateSList extends State<ShortsList>{
         body: jsonBody,
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json',}
     );
+    print("--------------::::::::>>>>>>>>>>>::::::::------ 1111     response : ${response.body}");
     if (response.statusCode == 200) {
-      print("--------------::::::::::::::::------response.body : ${response.body}");
+      //print(responses['code']);
+
       List<dynamic> jsonData = json.decode(response.body);
-      print("--------------------jsonData : ${jsonData}");
-      setState(() {
-        VDModel = jsonData.map((data) => VideoDataModel.fromJson(data)).toList();
-        //VSubTitle.add(VDModel as VideoDataModel);
-      });
-      print("--------------------VDModel : ${VDModel[0].Url}");
+
+      //VideoDataModel VDResponse = new VideoDataModel(id: jsonData[0][], title: title, SubTitle: SubTitle, Author: Author, Url: Url, ImgUrl: ImgUrl, GroupID: GroupID, Approve: Approve);
+      print("--------------::::::::>>>>>>>>>>>::::::::------jsonData : ${jsonData[0]}");
+      if(jsonData[0]["title"] == "0" && jsonData[0]["url"] == "0"){
+        VDResponseCode = 1;
+      }else{
+        VDResponseCode = 200;
+        setState(() {
+          VDModel = jsonData.map((data) => VideoDataModel.fromJson(data)).toList();
+          //VSubTitle.add(VDModel as VideoDataModel);
+        });
+      }
+
     } else {
-      print("????????????????????????????  Error GID : ${widget.GroupID}");
-      print("????????????????????????????  Error Action : ${widget.Action}");
+      VDResponseCode = 1;
     }
   }
 
@@ -208,14 +223,13 @@ class CreateSList extends State<ShortsList>{
                     width: DW * 0.492,
                     child: CDropdownAuthor(context),
                   ),
-
                 ],
               ),
             ),
             Container(
               height: 777,
               width: 290,
-              child: ListView.builder(
+              child: VDResponseCode == 200 ? ListView.builder(
                 controller: LVcontroller,
                 itemCount: VDModel.isEmpty ? 0 : VDModel.length,
                 itemBuilder: (BuildContext context, int index) =>
@@ -244,6 +258,10 @@ class CreateSList extends State<ShortsList>{
                 //         height: 777,
                 //         alignment: Alignment.center,
                 //       ),
+              ): Container(
+                alignment: Alignment.center,
+                child: Text("Sorry, no data available",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
               ),
             ),
           ],
@@ -254,7 +272,7 @@ class CreateSList extends State<ShortsList>{
   }
 //----------------------------------------------------------
   CDropdownButton(BuildContext context) {
-    print("/////--------------------------------------------------->>>>>>>>>>>>>>********************** ${SelectedSbuTitle.SubTitle}");
+    print("/////------------------------------------      CDropdownButton --------------->>>>>>>>>>>>>>********************** ${SelectedSbuTitle.SubTitle}");
 
     final double DW = MediaQuery.of(context).size.width;
 
@@ -278,13 +296,31 @@ class CreateSList extends State<ShortsList>{
             ),
           ),
           onChanged: (newValue) {
-            fetchProducts(Action: 51,
-                StartRN: StartRowNo, GrpID: widget.GroupID, SubT: newValue!.SubTitle);
             setState(() {
               SelectedSbuTitle = newValue!;
               drp1 = 1;
-              print("/////>>>>>>>>>>>>>>>>>>>>>>>>>>>///////////// ${SelectedSbuTitle.SubTitle}");
             });
+            if(SelectedTeacher.Author == "Select Teacher") {
+              if(SelectedSbuTitle.SubTitle == 'Select you like'){
+                fetchProducts(Action: 5,
+                    StartRN: StartRowNo,
+                    GrpID: widget.GroupID,
+                    SubT: "",
+                    Auth: "");
+              }else{
+                fetchProducts(Action: 51,
+                    StartRN: StartRowNo,
+                    GrpID: widget.GroupID,
+                    SubT: newValue!.SubTitle,
+                    Auth: "");
+              }
+            }else{
+              fetchProducts(Action: 5152,
+                  StartRN: StartRowNo,
+                  GrpID: widget.GroupID,
+                  SubT: newValue!.SubTitle,
+                  Auth: SelectedSbuTitle.SubTitle);
+            }
           },
           //value: SelectedSbuTitle,
 
@@ -327,11 +363,30 @@ class CreateSList extends State<ShortsList>{
             ),
           ),
           onChanged: (newValue) {
-            fetchProducts(Action: 51,
-                StartRN: StartRowNo, GrpID: widget.GroupID, SubT: newValue!.SubTitle);
+            if(SelectedTeacher.Author == "Select Teacher") {
+              if(SelectedSbuTitle.SubTitle == 'Select you like'){
+                fetchProducts(Action: 5,
+                    StartRN: StartRowNo,
+                    GrpID: widget.GroupID,
+                    SubT: "",
+                    Auth: "");
+              }else{
+                fetchProducts(Action: 51,
+                    StartRN: StartRowNo,
+                    GrpID: widget.GroupID,
+                    SubT: newValue!.SubTitle,
+                    Auth: "");
+              }
+            }else{
+              fetchProducts(Action: 5152,
+                  StartRN: StartRowNo,
+                  GrpID: widget.GroupID,
+                  SubT: newValue!.SubTitle,
+                  Auth: SelectedSbuTitle.SubTitle);
+            }
             setState(() {
               SelectedSbuTitle = newValue!;
-              print("/////>>>>>>>>>>>>>>>>>>>>>>>>>>>///////////// ${SelectedSbuTitle.SubTitle}");
+              drp1 = 1;
             });
           },
           value: SelectedSbuTitle,
@@ -360,7 +415,7 @@ class CreateSList extends State<ShortsList>{
   }
 //----------------------------------------------------------
   CDropdownAuthor(BuildContext context) {
-    print("/////>>>>>>>>>>>>>>********************** ${AuthTeacher}");
+    print("/////>>>>>>>>>>>>--------------------        CDropdownAuthor  >>********************** ${AuthTeacher}");
 
     final double DW = MediaQuery.of(context).size.width;
     if(drpAuthor1 == 0){
@@ -381,12 +436,33 @@ class CreateSList extends State<ShortsList>{
             ),
           ),
           onChanged: (newValue) {
-            fetchProducts(Action: 52,
-                StartRN: StartRowNo, GrpID: widget.GroupID, SubT: newValue!.Author);
-            setState(() {
-              SelectedTeacher = newValue!;
-              print("/////>>>>>>>>>        SelectedTeacher        >>>>>>>>>>>>>>>>>>///////////// ${SelectedTeacher.Author}");
-            });
+            if (SelectedSbuTitle.SubTitle == "Select you like"){
+              if(SelectedTeacher.Author == 'Select Teacher'){
+                fetchProducts(Action: 5,
+                    StartRN: StartRowNo,
+                    GrpID: widget.GroupID,
+                    SubT: "",
+                    Auth: "");
+              }else{
+                fetchProducts(Action: 52,
+                    StartRN: StartRowNo,
+                    GrpID: widget.GroupID,
+                    SubT: "",
+                    Auth: newValue!.Author);
+              }
+            }else{
+              fetchProducts(Action: 5152,
+                  StartRN: StartRowNo,
+                  GrpID: widget.GroupID,
+                  SubT: SelectedSbuTitle.SubTitle,
+                  Auth: newValue!.Author);
+            }
+              setState(() {
+                drpAuthor1 = 1;
+                SelectedTeacher = newValue!;
+                print("/////>>>>>>>>>    11----    SelectedTeacher        >>>>>>>>>>>>>>>>>>///////////// ${SelectedTeacher.Author}");
+              });
+
           },
           //value: SelectedTeacher,
 
@@ -425,11 +501,30 @@ class CreateSList extends State<ShortsList>{
             ),
           ),
           onChanged: (newValue) {
-            fetchProducts(Action: 52,
-                StartRN: StartRowNo, GrpID: widget.GroupID, SubT: newValue!.Author);
+            if (SelectedSbuTitle.SubTitle == "Select you like"){
+              if(SelectedTeacher.Author == 'Select Teacher'){
+                fetchProducts(Action: 5,
+                    StartRN: StartRowNo,
+                    GrpID: widget.GroupID,
+                    SubT: "",
+                    Auth: "");
+              }else{
+              fetchProducts(Action: 52,
+                  StartRN: StartRowNo,
+                  GrpID: widget.GroupID,
+                  SubT: "",
+                  Auth: newValue!.Author);
+              }
+            }else{
+              fetchProducts(Action: 5152,
+                  StartRN: StartRowNo,
+                  GrpID: widget.GroupID,
+                  SubT: SelectedSbuTitle,
+                  Auth: newValue!.Author);
+            }
             setState(() {
               SelectedTeacher = newValue!;
-              print("/////>>>>>>>>>        SelectedTeacher        >>>>>>>>>>>>>>>>>>///////////// ${SelectedTeacher.Author}");
+              print("/////>>>>>>>>>       222--- SelectedTeacher        >>>>>>>>>>>>>>>>>>///////////// ${SelectedTeacher}");
             });
           },
 

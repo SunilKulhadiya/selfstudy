@@ -46,6 +46,7 @@ class CreateHomePage extends State<Home>{
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json',}
     );
     if (response.statusCode == 200) {
+      print("--------------------Home : ${response.body}");
       List<dynamic> jsonData = json.decode(response.body);
       print("--------------------Home : ${jsonData}");
       setState(() {

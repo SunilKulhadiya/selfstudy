@@ -88,7 +88,7 @@ class CreateSList extends State<DocumentList>{
       body: Column(
           children: [
             Container(
-              height: 700,
+              height: 629,
               color: Colors.grey,
               child: Container(
                 child: Column(
@@ -175,7 +175,7 @@ class CreateSList extends State<DocumentList>{
 
 
             Container(
-                height: MediaQuery.of(context).size.height - 390,
+                height: MediaQuery.of(context).size.height - 354.3,
                 width: MediaQuery.of(context).size.width,
                 child: SingleChildScrollView(
                   physics: new BouncingScrollPhysics(),
@@ -230,12 +230,12 @@ class CreateSList extends State<DocumentList>{
                   ),
                 )
             ),
-
-
+            //
+            //
                   ],
                 ),
               ),
-            )
+            ),
 
           ]
       ),
