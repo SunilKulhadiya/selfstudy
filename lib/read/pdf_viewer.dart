@@ -63,7 +63,7 @@ class CreateSList extends State<MyPDFViewer>{
         title: Text(widget.PdfTitle,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Color.fromRGBO(117, 254, 250, 51),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())

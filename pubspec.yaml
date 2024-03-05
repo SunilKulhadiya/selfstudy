@@ -46,6 +46,7 @@ dependencies:
   youtube_player_flutter: ^8.0.0
   flutter_swiper: ^1.1.6
   webview_flutter: ^2.3.0
+  widget_zoom: ^0.0.3
 
 
 dev_dependencies:

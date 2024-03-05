@@ -191,7 +191,7 @@ class CreateSList extends State<ShortsList>{
     final double DH = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Color.fromRGBO(117, 254, 250, 51),
         title: Text(widget.clientName),
       ),
       body:Center(

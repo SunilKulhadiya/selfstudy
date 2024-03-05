@@ -5,13 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
 import '../module/data_module.dart';
 import 'package:selfstudy/shorts/youtub_player.dart';
 
+import 'package:selfstudy/app_config.dart';
 import '../read/pdf_viewer.dart';
 import '../shorts/shorts_list.dart';
 import 'package:selfstudy/home/google_search_view.dart';
+import 'package:selfstudy/module/carousel_model.dart';
+import 'package:selfstudy/image_viewer/image_view_zoom.dart';
 
 
 class Home extends StatefulWidget {
@@ -22,6 +24,7 @@ class Home extends StatefulWidget {
 }
 
 class CreateHomePage extends State<Home>{
+  List<CarouselDataModel> CaroUselData = [];
   List<VideoDataModel> ShortsData = [];
   List<VideoDataModel> DocData = [];
   final MySearchValue = TextEditingController();
@@ -33,14 +36,51 @@ class CreateHomePage extends State<Home>{
   }
   Future<void> fetchProducts() async {
     var body = {
-      "ACTION": "2",
+      "ACTION": "0",
       "ROWNO": 0,
-      "GROUPID": 0,
+      "GROUPID": "0",
+      "PAGE": "0"
     };
     var jsonBody = json.encode(body);
 
     // you can replace your api link with this link
     var response = await
+    http.post(Uri.parse(AppConfig.BASE_URL+'Fetch_SelfStudy.php'),
+        body: jsonBody,
+        headers: {'Accept': 'application/json', 'Content-Type': 'application/json',}
+    );
+    if (response.statusCode == 200) {
+      print("--------------------Home : ${response.body}");
+      List<dynamic> jsonData = json.decode(response.body);
+      print("--------------------Home : ${jsonData}");
+      setState(() {
+        CaroUselData = jsonData.map((data) => CarouselDataModel.fromJson(data)).toList();
+      });
+      print("-------------------Home-VDModel : ${ShortsData}");
+    } else {
+      CarouselDataModel CDM = new CarouselDataModel(id: 0, title: "",
+                              ImgUrl: AppConfig.CAROUSE_URL+'India_EtoW_NtoS_Length.jpg',
+                              GroupName: '', GroupID: "0", Approve: "1", Page: "0");
+      CaroUselData.add(CDM);
+      CDM = new CarouselDataModel(id: 0, title: "",
+          ImgUrl: AppConfig.CAROUSE_URL+'ArabSagarMeMilneBaliNadiyan.jpg',
+          GroupName: '', GroupID: "0", Approve: "1", Page: "0");
+      CaroUselData.add(CDM);
+      CDM = new CarouselDataModel(id: 0, title: "",
+          ImgUrl: AppConfig.CAROUSE_URL+'ArabSagarMeMilneBaliNadiyan.jpg',
+          GroupName: '', GroupID: "0", Approve: "1", Page: "0");
+      CaroUselData.add(CDM);
+    }
+    //-------------------------------
+    body = {
+      "ACTION": "2",
+      "ROWNO": 0,
+      "GROUPID": 0,
+    };
+    jsonBody = json.encode(body);
+
+    // you can replace your api link with this link
+    response = await
     http.post(Uri.parse('https://sewabhartidabra.in/APIs/Fetch_SelfStudy.php'),
         body: jsonBody,
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json',}
@@ -104,8 +144,8 @@ class CreateHomePage extends State<Home>{
                     child: Column(
                       children: [
                         Container(
-                          margin: EdgeInsets.fromLTRB(5, 10, 0, 0),
-                          alignment: Alignment.bottomLeft,
+                          margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                          alignment: Alignment.center,
                           height: 50,
                           width: W - 50,
                           decoration: BoxDecoration(
@@ -164,67 +204,39 @@ class CreateHomePage extends State<Home>{
                             width: double.infinity,
                             margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                             child: CarouselSlider(
-                              items: [
-                                //1st Image of Slider
-                                Container(
-                                  margin: EdgeInsets.all(6.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    image: DecorationImage(
-                                      image: NetworkImage("https://sewabhartidabra.in/Self_Study/Geography_Maps/download6.jpg"),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
+                              items: CaroUselData.map((fileImage) {
+                                int index = CaroUselData.indexOf(fileImage);
+                                return Builder(
+                                  builder: (BuildContext context) {
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8.0),
+                                      ),
+                                      margin: EdgeInsets.all(5.0),
+                                      child: GestureDetector(
+                                        child: Container(
+                                          margin: EdgeInsets.all(6.0),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(8.0),
+                                            image: DecorationImage(
+                                              image: NetworkImage(fileImage.ImgUrl),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          Navigator.of(context).push(MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Image_View_Zoom(CaroUselData: CaroUselData,
+                                                      ShowFirst: index.toDouble(),
+                                                      context: context)));
 
-                                //2nd Image of Slider
-                                Container(
-                                  margin: EdgeInsets.all(6.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    image: DecorationImage(
-                                      image: NetworkImage("https://sewabhartidabra.in/Self_Study/Geography_Maps/download7.jpg"),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-
-                                //3rd Image of Slider
-                                Container(
-                                  margin: EdgeInsets.all(6.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    image: DecorationImage(
-                                      image: NetworkImage("https://sewabhartidabra.in/Self_Study/Geography_Maps/OIP21.jpg"),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-
-                                //4th Image of Slider
-                                Container(
-                                  margin: EdgeInsets.all(6.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    image: DecorationImage(
-                                      image: NetworkImage("https://sewabhartidabra.in/Self_Study/Geography_Maps/OIP20.jpg"),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-
-                                //5th Image of Slider
-                                Container(
-                                  margin: EdgeInsets.all(6.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    image: DecorationImage(
-                                      image: NetworkImage("https://sewabhartidabra.in/Self_Study/Geography_Maps/OIP19.jpg"),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                                        },
+                                      ),
+                                    );
+                                  },
+                                );
+                              }).toList(),
 
                               //Slider Container properties
                               options: CarouselOptions(

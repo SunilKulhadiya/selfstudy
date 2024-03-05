@@ -8,6 +8,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:selfstudy/module/data_module.dart';
 import 'package:selfstudy/read/pdf_viewer.dart';
+import 'package:selfstudy/image_viewer/image_view_zoom.dart';
+
+import '../app_config.dart';
+import '../module/carousel_model.dart';
+import '../module/group_model.dart';
+
 
 final List<String> VideoUrl = <String>[
   'https://sewabhartidabra.in/Self_Study/GK/Video/Gk2.mp4',
@@ -23,7 +29,10 @@ class DocumentList extends StatefulWidget {
 }
 class CreateSList extends State<DocumentList>{
   List<VideoDataModel> PdfList = [];
+  List<CarouselDataModel> CaroUselData = [];
+  List<GroupDataModel> GroupName = [];
   late ScrollController LVcontroller;
+  late int VDResponseCode = 200;
   int StartRowNo = 0;
   var pixelRatio = window.devicePixelRatio;
 
@@ -56,188 +65,213 @@ class CreateSList extends State<DocumentList>{
   }
   Future<void> fetchProducts() async {
     //print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GID : ${}");
-    final body = {
-      "ACTION": "6",
-      "ROWNO": StartRowNo,
-      "GROUPID": "0", //widget.GroupID,
+    var body = {
+      "ACTION": "0",
+      "ROWNO": 0,
+      "GROUPID": 0,
+      "PAGE": 2
     };
-    final jsonBody = json.encode(body);
+    var jsonBody = json.encode(body);
 
     // you can replace your api link with this link
-    final response = await
+    var response = await
+    http.post(Uri.parse(AppConfig.BASE_URL+'Fetch_SelfStudy.php'),
+        body: jsonBody,
+        headers: {'Accept': 'application/json', 'Content-Type': 'application/json',}
+    );
+    if (response.statusCode == 200) {
+      print("--------------------Docu list--------------CaroUselData : ${response.body}");
+      List<dynamic> jsonData = json.decode(response.body);
+      print("--------------------Docu list --------------------CaroUselData : ${jsonData}");
+      setState(() {
+        CaroUselData = jsonData.map((data) => CarouselDataModel.fromJson(data)).toList();
+      });
+    } else {
+      CarouselDataModel CDM = new CarouselDataModel(id: 0, title: "",
+          ImgUrl: AppConfig.CAROUSE_URL+'India_EtoW_NtoS_Length.jpg',
+          GroupName: '', GroupID: "0", Approve: "1", Page: "0");
+      CaroUselData.add(CDM);
+      CDM = new CarouselDataModel(id: 0, title: "",
+          ImgUrl: AppConfig.CAROUSE_URL+'ArabSagarMeMilneBaliNadiyan.jpg',
+          GroupName: '', GroupID: "0", Approve: "1", Page: "0");
+      CaroUselData.add(CDM);
+      CDM = new CarouselDataModel(id: 0, title: "",
+          ImgUrl: AppConfig.CAROUSE_URL+'ArabSagarMeMilneBaliNadiyan.jpg',
+          GroupName: '', GroupID: "0", Approve: "1", Page: "0");
+      CaroUselData.add(CDM);
+    }
+    //-------------------------------
+    body = {
+      "ACTION": "6",
+      "ROWNO": 0,
+      "GROUPID": "0" //widget.GroupID,
+    };
+    jsonBody = json.encode(body);
+
+    // you can replace your api link with this link
+    response = await
     http.post(Uri.parse('https://sewabhartidabra.in/APIs/Fetch_SelfStudy.php'),
         body: jsonBody,
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json',}
     );
     if (response.statusCode == 200) {
+      print("--------------------response  ????????????????????? : ${response.body}");
       List<dynamic> jsonData = json.decode(response.body);
       print("--------------------jsonData : ${jsonData}");
       setState(() {
-        PdfList = jsonData.map((data) => VideoDataModel.fromJson(data)).toList();
+        GroupName = jsonData.map((data) => GroupDataModel.fromJson(data)).toList();
       });
-      print("--------------------VDModel : ${PdfList[0].Url}");
+      VDResponseCode = 200;
     } else {
       // Handle error if needed
+      VDResponseCode = 1;
+    }
+    //-------------------------------
+    if(VDResponseCode == 200) {
+        body = {
+          "ACTION": "60",
+          "ROWNO": StartRowNo,
+          "GROUPID": "0", //widget.GroupID,
+        };
+        jsonBody = json.encode(body);
+
+        // you can replace your api link with this link
+        response = await
+        http.post(
+            Uri.parse('https://sewabhartidabra.in/APIs/Fetch_SelfStudy.php'),
+            body: jsonBody,
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            }
+        );
+        if (response.statusCode == 200) {
+          List<dynamic> jsonData = json.decode(response.body);
+          print("--------------------jsonData : ${jsonData}");
+          setState(() {
+            PdfList =
+                jsonData.map((data) => VideoDataModel.fromJson(data)).toList();
+          });
+          print("--------------------VDModel : ${PdfList[0].Url}");
+          VDResponseCode = 1;
+        } else {
+          // Handle error if needed
+        }
     }
   }
 
 
   @override
   Widget build(BuildContext context) {
+    final double DW = MediaQuery.of(context).size.width;
+    final double DH = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      body: Column(
-          children: [
-            Container(
-              height: 629,
-              color: Colors.grey,
-              child: Container(
-                child: Column(
-                  children: [
-            Container(
-              height: 200,
-              child: CarouselSlider(
-                items: [
-                  //1st Image of Slider
-                  Container(
-                    margin: EdgeInsets.all(6.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0),
-                      image: DecorationImage(
-                        image: NetworkImage("https://sewabhartidabra.in/Self_Study/Geography_Maps/download6.jpg"),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-
-                  //2nd Image of Slider
-                  Container(
-                    margin: EdgeInsets.all(6.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0),
-                      image: DecorationImage(
-                        image: NetworkImage("https://sewabhartidabra.in/Self_Study/Geography_Maps/download7.jpg"),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-
-                  //3rd Image of Slider
-                  Container(
-                    margin: EdgeInsets.all(6.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0),
-                      image: DecorationImage(
-                        image: NetworkImage("https://sewabhartidabra.in/Self_Study/Geography_Maps/download8.jpg"),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-
-                  //4th Image of Slider
-                  Container(
-                    margin: EdgeInsets.all(6.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0),
-                      image: DecorationImage(
-                        image: NetworkImage("https://sewabhartidabra.in/Self_Study/Geography_Maps/download9.jpg"),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-
-                  //5th Image of Slider
-                  Container(
-                    margin: EdgeInsets.all(6.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0),
-                      image: DecorationImage(
-                        image: NetworkImage("https://sewabhartidabra.in/Self_Study/Geography_Maps/OIP.jpg"),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-
-                ],
-
-                //Slider Container properties
-                options: CarouselOptions(
-                  height: 180.0,
-                  enlargeCenterPage: true,
-                  autoPlay: true,
-                  aspectRatio: 16 / 9,
-                  autoPlayCurve: Curves.fastOutSlowIn,
-                  enableInfiniteScroll: true,
-                  autoPlayAnimationDuration: Duration(milliseconds: 800),
-                  viewportFraction: 0.8,
-                ),
-              ),
-            ),
-
-
-            Container(
-                height: MediaQuery.of(context).size.height - 354.3,
-                width: MediaQuery.of(context).size.width,
-                child: SingleChildScrollView(
-                  physics: new BouncingScrollPhysics(),
-                  scrollDirection: Axis.vertical,
+      body: Container(
+        color: Colors.grey,
+        child: SafeArea(
+            child: CustomScrollView(
+              slivers: <Widget>[
+                SliverToBoxAdapter(
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      ListView.builder(
-                        shrinkWrap: true,
-                        cacheExtent: 1000,
-                        physics: NeverScrollableScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        controller: LVcontroller,
-                        //key: PageStorageKey(widget.position),
-                        addAutomaticKeepAlives: true,
-                        itemCount: PdfList.isEmpty ? 0 : PdfList.length,
-                        itemBuilder: (BuildContext context, int index) =>
-                            Container(
-                              width: double.infinity,
-                              height: 70,
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                              child: GestureDetector(
-                                onTap: () async {
-                                  // if (await canLaunch('https://sewabhartidabra.in/Self_Study/GK/Compound_Interest_QA.pdf')) {
-                                  // await launchUrl('https://sewabhartidabra.in/Self_Study/GK/Compound_Interest_QA.pdf' as Uri);
-                                  // } else {
-                                  //   ScaffoldMessenger.of(context).showSnackBar(
-                                  //       SnackBar(content: Text('Clicked on Math Tricks!')));
-                                  // }
-                                  // launch('https://drive.google.com/viewerng/viewer?embedded=true&url='+'https://sewabhartidabra.in/Self_Study/GK/Compound_Interest_QA.pdf');
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          MyPDFViewer(PdfUrl: PdfList[index].Url,
-                                              PdfTitle: PdfList[index].title, context: context)));
-                                },
-                                child: Card(
-                                  child: SizedBox(
-                                    width: 300,
-                                    height: 60,
-                                    child: Center(
-                                      child: Text(PdfList[index].title,
-                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          alignment: Alignment.center,
+                          height: 200,
+                          width: double.infinity,
+                          margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                          child: CarouselSlider(
+                            items: CaroUselData.map((fileImage) {
+                              int index = CaroUselData.indexOf(fileImage);
+                              return Builder(
+                                builder: (BuildContext context) {
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.0),
                                     ),
-                                  ),
-                                ),
-                              ),
+                                    margin: EdgeInsets.all(5.0),
+                                    child: GestureDetector(
+                                      child: Container(
+                                        margin: EdgeInsets.all(6.0),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(8.0),
+                                          image: DecorationImage(
+                                            image: NetworkImage(fileImage.ImgUrl),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.of(context).push(MaterialPageRoute(
+                                            builder: (context) =>
+                                                Image_View_Zoom(CaroUselData: CaroUselData,
+                                                    ShowFirst: index.toDouble(),
+                                                    context: context)));
+                                      },
+                                    ),
+                                  );
+                                },
+                              );
+                            }).toList(),
+
+                            //Slider Container properties
+                            options: CarouselOptions(
+                              height: 200.0,
+                              //enlargeCenterPage: true,
+                              autoPlay: true,
+                              aspectRatio: 16 / 9,
+                              autoPlayCurve: Curves.fastOutSlowIn,
+                              enableInfiniteScroll: true,
+                              autoPlayAnimationDuration: Duration(milliseconds: 800),
+                              viewportFraction: 0.8,
                             ),
-
-                      ),
-                    ],
+                          ),
+                        ),
+                      ]
                   ),
-                )
-            ),
-            //
-            //
-                  ],
                 ),
-              ),
-            ),
 
-          ]
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                      return Container(
+                        margin: EdgeInsets.fromLTRB(10, 10, 0, 0),
+                        alignment: Alignment.centerLeft,
+                        child: Column(
+                          children: [
+                            Container(
+                              child: Text(GroupName[index].Group,
+                                style: TextStyle(fontSize: 20,
+                                    fontWeight: FontWeight.bold),),
+                            ),
+                            Container(
+                              child: Text('Null '),
+                              // SliverList(
+                              //   delegate: SliverChildBuilderDelegate(
+                              //         (BuildContext context, int pdfindex) {
+                              //       return Container(
+                              //         width: 50,
+                              //         height: 50,
+                              //         child: Text(pdfindex as String),
+                              //       );
+                              //     },
+                              //     childCount: PdfList.length,
+                              //   ),
+                              // ),
+
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    childCount: GroupName.length,
+                  ),
+                ),
+              ],
+            ),
+        ),
       ),
     );
   }
