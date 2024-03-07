@@ -1,24 +1,21 @@
 import 'dart:ffi';
 
-class GroupDataModel {
+class DocGroupDataModel {
   final String Group;
   final String GroupID;
-  final String ImgUrl;
   late final String ItemNos;
 
 
-  GroupDataModel({
+  DocGroupDataModel({
     required this.Group,
     required this.GroupID,
-    required this.ImgUrl,
     required this.ItemNos,
   });
 
-  factory GroupDataModel.fromJson(Map<String, dynamic> json) {
-    return GroupDataModel(
+  factory DocGroupDataModel.fromJson(Map<String, dynamic> json) {
+    return DocGroupDataModel(
       Group: json['group_name'],
       GroupID: json['group_id'],
-      ImgUrl: json['img_url'],
       ItemNos: json['group_id'],
     );
   }

@@ -3,8 +3,10 @@ import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 //import 'package:splashscreen/splashscreen.dart';
 
 import 'package:selfstudy/shorts/shorts_type.dart';
+import 'package:selfstudy/home/drawer_menu.dart';
 import 'package:selfstudy/home/home.dart';
 import 'package:selfstudy/read/docu_list.dart';
+import 'package:selfstudy/syllabus/syllabus.dart';
 
 void main() {
   runApp(const MyApp());
@@ -68,11 +70,13 @@ class _MyHomePageState extends State<MyHomePage> {
     Home(),
     ShortsType(),
     DocumentList(),
+    Syllabus()
   ];
   List _pagesTitle = [
     "Home",
     "Shorts",
     "Notes",
+    "Syllabus"
   ];
   final ScrollController _homeController = ScrollController();
 
@@ -110,6 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text(_pagesTitle[_selectedIndex]),
             ),
             body: _pages[_selectedIndex],
+            drawer: DrawerMenu(),
             bottomNavigationBar: BottomNavigationBar(
               items: const <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
@@ -123,6 +128,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 BottomNavigationBarItem(
                   icon: Icon(Icons.file_open_sharp),
                   label: 'Notes',
+                ),
+                BottomNavigationBarItem(
+                  icon: ImageIcon(AssetImage("assets/images/syllabus2.png")),
+                  label: 'Syllabus',
                 ),
               ],
               currentIndex: _selectedIndex,

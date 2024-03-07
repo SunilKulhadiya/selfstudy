@@ -7,7 +7,9 @@ class VideoDataModel {
   final String Author;
   final String Url;
   final String ImgUrl;
+  final String GroupName;
   final String GroupID;
+  final String SubGroupID;
   final String Approve;
 
   VideoDataModel({
@@ -17,7 +19,9 @@ class VideoDataModel {
     required this.Author,
     required this.Url,
     required this.ImgUrl,
+    required this.GroupName,
     required this.GroupID,
+    required this.SubGroupID,
     required this.Approve,
   });
 
@@ -29,7 +33,9 @@ class VideoDataModel {
       Author: json['author'],
       Url: json['url'],
       ImgUrl: json['img_url'],
+      GroupName: json['group_name'],
       GroupID: json['group_id'],
+      SubGroupID: json['sub_group_id'],
       Approve: json['approved'],
     );
   }

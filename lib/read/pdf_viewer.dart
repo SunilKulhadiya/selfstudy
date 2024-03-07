@@ -26,6 +26,7 @@ class CreateSList extends State<MyPDFViewer>{
   late File Pfile;
   bool isLoading = false;
   Future<void> loadNetwork() async {
+    print("---------------------------------Pdf Viewer title : ${widget.PdfTitle}");
     setState(() {
       isLoading = true;
     });
@@ -61,7 +62,7 @@ class CreateSList extends State<MyPDFViewer>{
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.PdfTitle,
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
         ),
         backgroundColor: Color.fromRGBO(117, 254, 250, 51),
       ),

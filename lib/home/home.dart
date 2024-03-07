@@ -135,7 +135,9 @@ class CreateHomePage extends State<Home>{
     final double W = MediaQuery.of(context).size.width;
     print("----------------------------------------W : ${W}");
     return Scaffold(
-      body: Container(
+      body: RefreshIndicator(
+        onRefresh: fetchProducts,
+        child: Container(
         color: Colors.grey,
         child: SafeArea(
             child: CustomScrollView(
@@ -326,7 +328,7 @@ class CreateHomePage extends State<Home>{
                                 },
                               child: Padding(
                                 padding: EdgeInsets.all(3),
-                                child: Text('Full Screen',
+                                child: Text('Full Screen', softWrap: true,
                                   style: TextStyle(fontWeight: FontWeight.bold,
                                     fontSize: 16,),),                          )
                           ),
@@ -360,13 +362,6 @@ class CreateHomePage extends State<Home>{
                       return Stack(
                         children: [
                           Container(
-                            // decoration: BoxDecoration(
-                            //     color: Colors.white,
-                            //     border: Border.all(
-                            //       color: Color.fromRGBO(11, 86, 183, 50),
-                            //       width: 1.0,
-                            //     )
-                            // ),
                             margin: EdgeInsets.all(5),
                             alignment: Alignment.center,
                           child: GestureDetector(
@@ -402,174 +397,8 @@ class CreateHomePage extends State<Home>{
               ],
             )),
       ),
+      ),
     );
-
-
-
-
-    //   Scaffold(
-    //   body: Container(
-    //     child: Column(
-    //
-    //   children: [
-    //     Container(
-    //       height: 200,
-    //       child: Column(
-    //         children: [
-    //           Container(
-    //             height: 200,
-    //             child: CarouselSlider(
-    //               items: [
-    //                 //1st Image of Slider
-    //                 Container(
-    //                   margin: EdgeInsets.all(6.0),
-    //                   decoration: BoxDecoration(
-    //                     borderRadius: BorderRadius.circular(8.0),
-    //                     image: DecorationImage(
-    //                       image: NetworkImage("https://sewabhartidabra.in/Self_Study/Geography_Maps/download6.jpg"),
-    //                       fit: BoxFit.cover,
-    //                     ),
-    //                   ),
-    //                 ),
-    //
-    //                 //2nd Image of Slider
-    //                 Container(
-    //                   margin: EdgeInsets.all(6.0),
-    //                   decoration: BoxDecoration(
-    //                     borderRadius: BorderRadius.circular(8.0),
-    //                     image: DecorationImage(
-    //                       image: NetworkImage("https://sewabhartidabra.in/Self_Study/Geography_Maps/download7.jpg"),
-    //                       fit: BoxFit.cover,
-    //                     ),
-    //                   ),
-    //                 ),
-    //
-    //                 //3rd Image of Slider
-    //                 Container(
-    //                   margin: EdgeInsets.all(6.0),
-    //                   decoration: BoxDecoration(
-    //                     borderRadius: BorderRadius.circular(8.0),
-    //                     image: DecorationImage(
-    //                       image: NetworkImage("https://sewabhartidabra.in/Self_Study/Geography_Maps/OIP21.jpg"),
-    //                       fit: BoxFit.cover,
-    //                     ),
-    //                   ),
-    //                 ),
-    //
-    //                 //4th Image of Slider
-    //                 Container(
-    //                   margin: EdgeInsets.all(6.0),
-    //                   decoration: BoxDecoration(
-    //                     borderRadius: BorderRadius.circular(8.0),
-    //                     image: DecorationImage(
-    //                       image: NetworkImage("https://sewabhartidabra.in/Self_Study/Geography_Maps/OIP20.jpg"),
-    //                       fit: BoxFit.cover,
-    //                     ),
-    //                   ),
-    //                 ),
-    //
-    //                 //5th Image of Slider
-    //                 Container(
-    //                   margin: EdgeInsets.all(6.0),
-    //                   decoration: BoxDecoration(
-    //                     borderRadius: BorderRadius.circular(8.0),
-    //                     image: DecorationImage(
-    //                       image: NetworkImage("https://sewabhartidabra.in/Self_Study/Geography_Maps/OIP19.jpg"),
-    //                       fit: BoxFit.cover,
-    //                     ),
-    //                   ),
-    //                 ),
-    //
-    //               ],
-    //
-    //               //Slider Container properties
-    //               options: CarouselOptions(
-    //                 height: 180.0,
-    //                 //enlargeCenterPage: true,
-    //                 autoPlay: true,
-    //                 aspectRatio: 16 / 9,
-    //                 autoPlayCurve: Curves.fastOutSlowIn,
-    //                 enableInfiniteScroll: true,
-    //                 autoPlayAnimationDuration: Duration(milliseconds: 800),
-    //                 viewportFraction: 0.8,
-    //               ),
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //
-    //     Container(
-    //       margin: EdgeInsets.fromLTRB(10, 10, 0, 0),
-    //       alignment: Alignment.bottomLeft,
-    //       child: Column(
-    //         children: [
-    //           // Container(
-    //           //   child: Text('Latest Asked Questions',
-    //           //     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),),
-    //           // ),
-    //           Container(
-    //             margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-    //             alignment: Alignment.bottomLeft,
-    //             child: Column(
-    //               children: [
-    //                 Container(
-    //                   alignment: Alignment.bottomLeft,
-    //                   child: Text('Shorts',
-    //                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),),
-    //                 ),
-    //                 Container(
-    //                   width: 400,
-    //                   height: 700,
-    //                     child: GridView.builder(
-    //                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-    //                         crossAxisCount: 3, // number of items in each row
-    //                         mainAxisSpacing: 8.0, // spacing between rows
-    //                         crossAxisSpacing: 8.0, // spacing between columns
-    //                       ),
-    //                       padding: EdgeInsets.all(8.0), // padding around the grid
-    //                       itemCount: ShortsData.length, // total number of items
-    //                       itemBuilder: (context, index) {
-    //                         return Container(
-    //                           color: Colors.blue, // color of grid items
-    //                           child: Center(
-    //                             child: Text(ShortsData[index].title,
-    //                               style: TextStyle(fontSize: 18.0, color: Colors.white),
-    //                             ),
-    //                           ),
-    //                         );
-    //                       },
-    //                     )
-    //
-    //                 ),
-    //               ],
-    //             )
-    //           ),
-    //           Container(
-    //             alignment: Alignment.bottomLeft,
-    //             child: Text('G.K.',
-    //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),),
-    //           ),
-    //           Container(
-    //             alignment: Alignment.bottomLeft,
-    //             child: Text('Mathmetic Tricks',
-    //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),),
-    //           ),
-    //           Container(
-    //             alignment: Alignment.bottomLeft,
-    //             child: Text('Geography',
-    //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),),
-    //           ),
-    //
-    //         ],
-    //       ),
-    //     )
-    //
-    //
-    //   ],
-    //   ),
-    //   ),
-    // );
 
   }//build
 
