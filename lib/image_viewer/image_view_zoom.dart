@@ -57,8 +57,8 @@ class CreateSList extends State<Image_View_Zoom>{
                 itemBuilder: (BuildContext context, int index) =>
                 Container(
                   width: DW - 20,
-                  height: DH - 80,
-                  alignment: Alignment.center,
+                  height: DH - 90,
+                  alignment: Alignment.topCenter,
                   key: UniqueKey(),
                   child: Container(
                       key: new PageStorageKey(
@@ -67,7 +67,7 @@ class CreateSList extends State<Image_View_Zoom>{
                       child: WidgetZoom(
                         heroAnimationTag: 'tag',
                         zoomWidget: Image.network(widget.CaroUselData[index].ImgUrl,
-                          width: DW - 10, height: DH - 200, fit: BoxFit.fill,),
+                          width: DW - 10, height: DH - 250, fit: BoxFit.fill,),
                       )
                   ),
                 ),

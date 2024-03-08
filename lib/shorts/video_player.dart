@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:video_player/video_player.dart';
 
 class MyVideoPlayer extends StatefulWidget {
-  final String VideoUrl;
+  //final String VideoUrl;
+  final File? VideoUrl;
   final BuildContext context;
 
   const MyVideoPlayer({super.key,
@@ -28,7 +30,8 @@ class _MySpecificPageState extends State<MyVideoPlayer> {
   }
 
   Future<void> fetchProducts() async {
-    controller = VideoPlayerController.network(widget.VideoUrl)
+    //controller = VideoPlayerController.network(widget.VideoUrl)
+    controller = VideoPlayerController.file(widget.VideoUrl!)
       ..initialize().then((_) {
         // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
         setState(() {});
@@ -46,7 +49,8 @@ class _MySpecificPageState extends State<MyVideoPlayer> {
   void videoHandler() {
     print("----------------${controller}");
     if (controller == null) {
-      controller = VideoPlayerController.network(widget.VideoUrl)
+      //controller = VideoPlayerController.network(widget.VideoUrl)
+      controller = VideoPlayerController.file(widget.VideoUrl!)
         ..addListener(listener)
         ..setVolume(0.5)
         ..initialize()

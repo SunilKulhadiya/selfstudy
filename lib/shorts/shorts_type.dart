@@ -16,10 +16,10 @@ import '../module/carousel_model.dart';
 import '../module/group_model.dart';
 
 
-final List<String> VideoUrl = <String>[
-  'https://sewabhartidabra.in/Self_Study/GK/Video/Gk2.mp4',
-  'https://sewabhartidabra.in/Self_Study/GK/Video/Gk3.mp4',
-  'https://sewabhartidabra.in/Self_Study/GK/Video/Gk4.mp4'];
+// final List<String> VideoUrl = <String>[
+//   'https://sewabhartidabra.in/Self_Study/GK/Video/Gk2.mp4',
+//   'https://sewabhartidabra.in/Self_Study/GK/Video/Gk3.mp4',
+//   'https://sewabhartidabra.in/Self_Study/GK/Video/Gk4.mp4'];
 
 class ShortsType extends StatefulWidget {
 
@@ -98,7 +98,7 @@ class CreateSList extends State<ShortsType>{
 
     // you can replace your api link with this link
     var response = await
-    http.post(Uri.parse(AppConfig.BASE_URL + 'Fetch_SelfStudy.php'),
+    http.post(Uri.parse(AppConfig.BASE_API_URL+'Fetch_SelfStudy.php'),
         body: jsonBody,
         headers: {
           'Accept': 'application/json',
@@ -150,7 +150,7 @@ class CreateSList extends State<ShortsType>{
 
     // you can replace your api link with this link
     response = await
-    http.post(Uri.parse('https://sewabhartidabra.in/APIs/Fetch_SelfStudy.php'),
+    http.post(Uri.parse(AppConfig.BASE_API_URL+'Fetch_SelfStudy.php'),
         body: jsonBody,
         headers: {
           'Accept': 'application/json',

@@ -3,7 +3,7 @@ import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 //import 'package:splashscreen/splashscreen.dart';
 
 import 'package:selfstudy/shorts/shorts_type.dart';
-import 'package:selfstudy/home/drawer_menu.dart';
+import 'package:selfstudy/drawer_menus/drawer_menu.dart';
 import 'package:selfstudy/home/home.dart';
 import 'package:selfstudy/read/docu_list.dart';
 import 'package:selfstudy/syllabus/syllabus.dart';

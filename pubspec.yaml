@@ -47,6 +47,7 @@ dependencies:
   flutter_swiper: ^1.1.6
   webview_flutter: ^2.3.0
   widget_zoom: ^0.0.3
+  image_picker: ^0.8.6+1
 
 
 dev_dependencies:

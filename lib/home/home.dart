@@ -45,7 +45,7 @@ class CreateHomePage extends State<Home>{
 
     // you can replace your api link with this link
     var response = await
-    http.post(Uri.parse(AppConfig.BASE_URL+'Fetch_SelfStudy.php'),
+    http.post(Uri.parse(AppConfig.BASE_API_URL+'Fetch_SelfStudy.php'),
         body: jsonBody,
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json',}
     );
@@ -81,7 +81,7 @@ class CreateHomePage extends State<Home>{
 
     // you can replace your api link with this link
     response = await
-    http.post(Uri.parse('https://sewabhartidabra.in/APIs/Fetch_SelfStudy.php'),
+    http.post(Uri.parse(AppConfig.BASE_API_URL+'Fetch_SelfStudy.php'),
         body: jsonBody,
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json',}
     );
@@ -106,7 +106,7 @@ class CreateHomePage extends State<Home>{
 
     // you can replace your api link with this link
     response = await
-    http.post(Uri.parse('https://sewabhartidabra.in/APIs/Fetch_SelfStudy.php'),
+    http.post(Uri.parse(AppConfig.BASE_API_URL+'Fetch_SelfStudy.php'),
         body: jsonBody,
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json',}
     );

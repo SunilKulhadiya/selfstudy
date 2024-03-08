@@ -21,6 +21,7 @@ class AppConfig {
   static const String PROTOCOL = "https://";
   static const String RAW_BASE_URL = "${PROTOCOL}${DOMAIN_PATH}";
   static const String BASE_URL = "${RAW_BASE_URL}/${API_ENDPATH}/";
+  static const String BASE_API_URL = "${RAW_BASE_URL}/${API_ENDPATH}/";
   static const String CAROUSE_BASE_URL = "/Self_Study/Carousel/";
   static const String LOGO_URL = "${RAW_BASE_URL}/Self_Study/Logo_Images/";
   static const String CAROUSE_URL = "${PROTOCOL}${DOMAIN_PATH}${CAROUSE_BASE_URL}";

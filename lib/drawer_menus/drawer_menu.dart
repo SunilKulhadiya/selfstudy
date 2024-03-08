@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:selfstudy/app_config.dart';
+import 'package:selfstudy/drawer_menus/upload_files.dart';
+import 'package:selfstudy/drawer_menus/terms_conditions.dart';
 
 class DrawerMenu extends StatefulWidget {
 
@@ -44,7 +46,8 @@ class CreateSList extends State<DrawerMenu>{
                     children: const[
                       CircleAvatar(
                         radius: 52,
-                        backgroundImage: NetworkImage(AppConfig.LOGO_URL+"SelfStudyLogo.png"),
+                        backgroundImage: AssetImage('assets/images/SelfStudyLogo.png'),
+                        //backgroundImage: NetworkImage(AppConfig.LOGO_URL+"SelfStudyLogo.png"),
                       ),
                       SizedBox(height: 12,),
                       Text('Self Study',
@@ -68,7 +71,7 @@ class CreateSList extends State<DrawerMenu>{
             Column(
               children: [
                 ListTile(
-                  leading: Icon(Icons.home_outlined),
+                  leading: Icon(Icons.person_4_rounded),
                   title: Text('Profile'),
                   onTap: (){
                     /// Close Navigation drawer before
@@ -77,12 +80,13 @@ class CreateSList extends State<DrawerMenu>{
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.favorite_border),
+                  leading: Icon(Icons.cloud_upload_outlined),
                   title: Text('Upload'),
                   onTap: (){
                     /// Close Navigation drawer before
-                    // Navigator.pop(context);
-                    // Navigator.push(context, MaterialPageRoute(builder: (context) => FavouriteScreen()),);
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                        UploadFiles()),);
                   },
                 ),
                 // ListTile(
@@ -103,8 +107,12 @@ class CreateSList extends State<DrawerMenu>{
                 // ),
                 ListTile(
                   leading: Icon(Icons.notifications_outlined),
-                  title: Text('Notifications'),
-                  onTap: (){},
+                  title: Text('Terms & Conditions'),
+                  onTap: (){
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                        TermsConditions()),);
+                  },
                 ),
               ],
             )

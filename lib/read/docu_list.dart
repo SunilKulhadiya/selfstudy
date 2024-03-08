@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:selfstudy/module/data_module.dart';
 import 'package:selfstudy/module/doc_group_model.dart';
 import 'package:selfstudy/read/pdf_viewer.dart';
+import 'package:selfstudy/read/webviews.dart';
 import 'package:selfstudy/image_viewer/image_view_zoom.dart';
 
 import '../app_config.dart';
@@ -81,7 +82,7 @@ class CreateSList extends State<DocumentList>{
     }
   }
   Future<void> fetchProducts() async {
-    //print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GID : ${}");
+    //print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
     var body = {
       "ACTION": "0",
       "ROWNO": 0,
@@ -195,8 +196,10 @@ class CreateSList extends State<DocumentList>{
                     jsonData.map((data) => VideoDataModel.fromJson(data))
                         .toList();
               });
-              print("---->>>>>>>>>>>----------Data--for---${GroupName[j]
-                  .Group} : ${jsonData}");
+              // print("---->>>>>>>>>>>----------Data--for--/////////////////////////777777777777777777777777777777777777777777777");
+              // print(GKPdfList[0].ImgUrl);
+              // print(GKPdfList[0].ImgUrl.lastIndexOf("."));
+              // print(GKPdfList[0].ImgUrl.substring(GKPdfList[0].ImgUrl.lastIndexOf(".")+1, GKPdfList[0].ImgUrl.length));
             }
               if (GroupName[j].GroupID == "2"){
               setState(() {
@@ -238,8 +241,6 @@ class CreateSList extends State<DocumentList>{
               EconomicSocialDevpPdfList =
                   jsonData.map((data) => VideoDataModel.fromJson(data))
                       .toList();
-              print("---->>>>>>>>>>>----------Data--for---${GroupName[j]
-                  .Group} : ${jsonData}");
             }
             if (GroupName[j].GroupID == "7"){
               EnvironmentEcologyPdfList =
@@ -419,10 +420,10 @@ class CreateSList extends State<DocumentList>{
               ),
               SliverGrid(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 120.0,
+                  maxCrossAxisExtent: 150.0,
                   mainAxisSpacing: 2.0,
                   crossAxisSpacing: 2.0,
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.5,
                   //mainAxisExtent:
                 ),
                 delegate: SliverChildBuilderDelegate(
@@ -432,22 +433,47 @@ class CreateSList extends State<DocumentList>{
                           children: [
                             Container(
                                 width: DW - 120,
-                                height: DH * 0.13,
+                                height: DH * 0.3,
                               margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                                 // margin: EdgeInsets.all(5),
                                 alignment: Alignment.center,
                                 child: GestureDetector(
                                   onTap: () {
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (context) =>
-                                            MyPDFViewer(PdfUrl: GKPdfList[PDFindex].Url,
-                                                PdfTitle: GKPdfList[PDFindex].SubTitle, context: context)));
+                                    if(GKPdfList[PDFindex].Url.substring(GKPdfList[PDFindex].Url.lastIndexOf(".")+1, GKPdfList[PDFindex].Url.length) == "pdf") {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  MyPDFViewer(
+                                                      PdfUrl: GKPdfList[PDFindex].Url,
+                                                      PdfTitle: GKPdfList[PDFindex].SubTitle,
+                                                      context: context)));
+                                    }else{
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (context) =>
+                                              WebViews(WebUrl: GKPdfList[PDFindex].Url,
+                                                  Title: GKPdfList[PDFindex].SubTitle,
+                                                  context: context)
+                                      ));
+                                    }
                                   },
-
-                                  child: Image.network(GKPdfList[PDFindex].ImgUrl),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        height: DH * 0.2,
+                                        padding: EdgeInsets.all(3),
+                                        child: Image.network(GKPdfList[PDFindex].ImgUrl),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.all(3),
+                                        child: Text(GKPdfList[PDFindex].SubTitle,
+                                                style: TextStyle(fontSize: GKPdfList[PDFindex].SubTitle.length > 30 ? 10 : 14),),
+                                      )
+                                    ],
+                                  )
                                 ),
                             ),
                           ]
@@ -474,10 +500,10 @@ class CreateSList extends State<DocumentList>{
               ),
               SliverGrid(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 120.0,
+                  maxCrossAxisExtent: 150.0,
                   mainAxisSpacing: 2.0,
                   crossAxisSpacing: 2.0,
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.5,
                   //mainAxisExtent:
                 ),
                 delegate: SliverChildBuilderDelegate(
@@ -487,22 +513,45 @@ class CreateSList extends State<DocumentList>{
                           children: [
                             Container(
                               width: DW - 120,
-                              height: DH * 0.13,
+                              height: DH * 0.3,
                               margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               // margin: EdgeInsets.all(5),
                               alignment: Alignment.center,
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          MyPDFViewer(PdfUrl: HistoryPdfList[PDFindex].Url,
-                                              PdfTitle: HistoryPdfList[PDFindex].SubTitle,
-                                              context: context)));
+                                  if(HistoryPdfList[PDFindex].Url.substring(HistoryPdfList[PDFindex].Url.lastIndexOf(".")+1, HistoryPdfList[PDFindex].Url.length) == "pdf") {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            MyPDFViewer(PdfUrl: HistoryPdfList[PDFindex].Url,
+                                                PdfTitle: HistoryPdfList[PDFindex].SubTitle,
+                                                context: context)));
+                                  }else{
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            WebViews(WebUrl: HistoryPdfList[PDFindex].Url,
+                                                Title: HistoryPdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }
                                 },
-                                child: Image.network(HistoryPdfList[PDFindex].ImgUrl),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        height: DH * 0.2,
+                                        padding: EdgeInsets.all(3),
+                                        child: Image.network(HistoryPdfList[PDFindex].ImgUrl),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.all(3),
+                                        child: Text(HistoryPdfList[PDFindex].SubTitle,
+                                          style: TextStyle(fontSize: HistoryPdfList[PDFindex].SubTitle.length > 30 ? 10 : 14),),
+                                      )
+                                    ],
+                                  )
                               ),
                             ),
                           ]
@@ -530,10 +579,10 @@ class CreateSList extends State<DocumentList>{
               ),
               SliverGrid(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 120.0,
+                  maxCrossAxisExtent: 150.0,
                   mainAxisSpacing: 2.0,
                   crossAxisSpacing: 2.0,
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.5,
                   //mainAxisExtent:
                 ),
                 delegate: SliverChildBuilderDelegate(
@@ -543,22 +592,45 @@ class CreateSList extends State<DocumentList>{
                           children: [
                             Container(
                               width: DW - 120,
-                              height: DH * 0.13,
+                              height: DH * 0.3,
                               margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               // margin: EdgeInsets.all(5),
                               alignment: Alignment.center,
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                      MyPDFViewer(PdfUrl: NationalMovementPdfList[PDFindex].Url,
-                                          PdfTitle: NationalMovementPdfList[PDFindex].SubTitle,
-                                          context: context)));
+                                  if(NationalMovementPdfList[PDFindex].Url.substring(NationalMovementPdfList[PDFindex].Url.lastIndexOf(".")+1, NationalMovementPdfList[PDFindex].Url.length) == "pdf") {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            MyPDFViewer(PdfUrl: NationalMovementPdfList[PDFindex].Url,
+                                                PdfTitle: NationalMovementPdfList[PDFindex].SubTitle,
+                                                context: context)));
+                                  }else{
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            WebViews(WebUrl: NationalMovementPdfList[PDFindex].Url,
+                                                Title: NationalMovementPdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }
                                 },
-                                child: Image.network(NationalMovementPdfList[PDFindex].ImgUrl),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: DH * 0.2,
+                                      padding: EdgeInsets.all(3),
+                                      child: Image.network(NationalMovementPdfList[PDFindex].ImgUrl),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.all(3),
+                                      child: Text(NationalMovementPdfList[PDFindex].SubTitle,
+                                        style: TextStyle(fontSize: NationalMovementPdfList[PDFindex].SubTitle.length > 30 ? 10 : 14),),
+                                    )
+                                  ],
+                                )
                               ),
                             ),
                           ]
@@ -586,10 +658,10 @@ class CreateSList extends State<DocumentList>{
               ),
               SliverGrid(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 120.0,
+                  maxCrossAxisExtent: 150.0,
                   mainAxisSpacing: 2.0,
                   crossAxisSpacing: 2.0,
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.5,
                   //mainAxisExtent:
                 ),
                 delegate: SliverChildBuilderDelegate(
@@ -599,22 +671,45 @@ class CreateSList extends State<DocumentList>{
                           children: [
                             Container(
                               width: DW - 120,
-                              height: DH * 0.13,
+                              height: DH * 0.3,
                               margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               // margin: EdgeInsets.all(5),
                               alignment: Alignment.center,
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                      MyPDFViewer(PdfUrl: GeographyPdfList[PDFindex].Url,
-                                          PdfTitle: GeographyPdfList[PDFindex].SubTitle,
-                                          context: context)));
+                                  if(GeographyPdfList[PDFindex].Url.substring(GeographyPdfList[PDFindex].Url.lastIndexOf(".")+1, GeographyPdfList[PDFindex].Url.length) == "pdf") {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            MyPDFViewer(PdfUrl: GeographyPdfList[PDFindex].Url,
+                                                PdfTitle: GeographyPdfList[PDFindex].SubTitle,
+                                                context: context)));
+                                  }else{
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            WebViews(WebUrl: GeographyPdfList[PDFindex].Url,
+                                                Title: GeographyPdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }
                                 },
-                                child: Image.network(GeographyPdfList[PDFindex].ImgUrl),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: DH * 0.2,
+                                      padding: EdgeInsets.all(3),
+                                      child: Image.network(GeographyPdfList[PDFindex].ImgUrl),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.all(3),
+                                      child: Text(GeographyPdfList[PDFindex].SubTitle,
+                                        style: TextStyle(fontSize: GeographyPdfList[PDFindex].SubTitle.length > 30 ? 10 : 14),),
+                                    )
+                                  ],
+                                )
                               ),
                             ),
                           ]
@@ -642,10 +737,10 @@ class CreateSList extends State<DocumentList>{
               ),
               SliverGrid(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 120.0,
+                  maxCrossAxisExtent: 150.0,
                   mainAxisSpacing: 2.0,
                   crossAxisSpacing: 2.0,
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.5,
                   //mainAxisExtent:
                 ),
                 delegate: SliverChildBuilderDelegate(
@@ -655,23 +750,46 @@ class CreateSList extends State<DocumentList>{
                           children: [
                             Container(
                               width: DW - 120,
-                              height: DH * 0.13,
+                              height: DH * 0.3,
                               margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               // margin: EdgeInsets.all(5),
                               alignment: Alignment.center,
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          MyPDFViewer(PdfUrl: IndianPolityGovernancePdfList[PDFindex].Url,
-                                              PdfTitle: IndianPolityGovernancePdfList[PDFindex].SubTitle,
-                                              context: context)
-                                  ));
-                                },
-                                child: Image.network(IndianPolityGovernancePdfList[PDFindex].ImgUrl),
+                                  if(IndianPolityGovernancePdfList[PDFindex].Url.substring(IndianPolityGovernancePdfList[PDFindex].Url.lastIndexOf(".")+1, IndianPolityGovernancePdfList[PDFindex].Url.length) == "pdf") {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            MyPDFViewer(PdfUrl: IndianPolityGovernancePdfList[PDFindex].Url,
+                                                PdfTitle: IndianPolityGovernancePdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }else{
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            WebViews(WebUrl: IndianPolityGovernancePdfList[PDFindex].Url,
+                                                Title: IndianPolityGovernancePdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }
+                               },
+                              child: Column(
+                                children: [
+                                  Container(
+                                    height: DH * 0.2,
+                                    padding: EdgeInsets.all(3),
+                                    child: Image.network(IndianPolityGovernancePdfList[PDFindex].ImgUrl),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.all(3),
+                                    child: Text(IndianPolityGovernancePdfList[PDFindex].SubTitle,
+                                      style: TextStyle(fontSize: IndianPolityGovernancePdfList[PDFindex].SubTitle.length > 30 ? 10 : 14),),
+                                  )
+                                ],
+                              )
                               ),
                             ),
                           ]
@@ -699,10 +817,10 @@ class CreateSList extends State<DocumentList>{
               ),
               SliverGrid(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 120.0,
+                  maxCrossAxisExtent: 150.0,
                   mainAxisSpacing: 2.0,
                   crossAxisSpacing: 2.0,
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.5,
                   //mainAxisExtent:
                 ),
                 delegate: SliverChildBuilderDelegate(
@@ -712,23 +830,46 @@ class CreateSList extends State<DocumentList>{
                           children: [
                             Container(
                               width: DW - 120,
-                              height: DH * 0.13,
+                              height: DH * 0.3,
                               margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               // margin: EdgeInsets.all(5),
                               alignment: Alignment.center,
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          MyPDFViewer(PdfUrl: EconomicSocialDevpPdfList[PDFindex].Url,
-                                              PdfTitle: EconomicSocialDevpPdfList[PDFindex].SubTitle,
-                                              context: context)
-                                  ));
+                                  if(EconomicSocialDevpPdfList[PDFindex].Url.substring(EconomicSocialDevpPdfList[PDFindex].Url.lastIndexOf(".")+1, EconomicSocialDevpPdfList[PDFindex].Url.length) == "pdf") {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            MyPDFViewer(PdfUrl: EconomicSocialDevpPdfList[PDFindex].Url,
+                                                PdfTitle: EconomicSocialDevpPdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }else{
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            WebViews(WebUrl: EconomicSocialDevpPdfList[PDFindex].Url,
+                                                Title: EconomicSocialDevpPdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }
                                 },
-                                child: Image.network(EconomicSocialDevpPdfList[PDFindex].ImgUrl),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: DH * 0.2,
+                                      padding: EdgeInsets.all(3),
+                                      child: Image.network(EconomicSocialDevpPdfList[PDFindex].ImgUrl),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.all(3),
+                                      child: Text(EconomicSocialDevpPdfList[PDFindex].SubTitle,
+                                        style: TextStyle(fontSize: EconomicSocialDevpPdfList[PDFindex].SubTitle.length > 30 ? 10 : 14),),
+                                    )
+                                  ],
+                                )
                               ),
                             ),
                           ]
@@ -756,10 +897,10 @@ class CreateSList extends State<DocumentList>{
               ),
               SliverGrid(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 120.0,
+                  maxCrossAxisExtent: 150.0,
                   mainAxisSpacing: 2.0,
                   crossAxisSpacing: 2.0,
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.5,
                   //mainAxisExtent:
                 ),
                 delegate: SliverChildBuilderDelegate(
@@ -769,23 +910,46 @@ class CreateSList extends State<DocumentList>{
                           children: [
                             Container(
                               width: DW - 120,
-                              height: DH * 0.13,
+                              height: DH * 0.3,
                               margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               // margin: EdgeInsets.all(5),
                               alignment: Alignment.center,
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          MyPDFViewer(PdfUrl: EnvironmentEcologyPdfList[PDFindex].Url,
-                                              PdfTitle: EnvironmentEcologyPdfList[PDFindex].SubTitle,
-                                              context: context)
-                                  ));
+                                  if(EnvironmentEcologyPdfList[PDFindex].Url.substring(EnvironmentEcologyPdfList[PDFindex].Url.lastIndexOf(".")+1, EnvironmentEcologyPdfList[PDFindex].Url.length) == "pdf") {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            MyPDFViewer(PdfUrl: EnvironmentEcologyPdfList[PDFindex].Url,
+                                                PdfTitle: EnvironmentEcologyPdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }else{
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            WebViews(WebUrl: EnvironmentEcologyPdfList[PDFindex].Url,
+                                                Title: EnvironmentEcologyPdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }
                                 },
-                                child: Image.network(EnvironmentEcologyPdfList[PDFindex].ImgUrl),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: DH * 0.2,
+                                      padding: EdgeInsets.all(3),
+                                      child: Image.network(EnvironmentEcologyPdfList[PDFindex].ImgUrl),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.all(3),
+                                      child: Text(EnvironmentEcologyPdfList[PDFindex].SubTitle,
+                                        style: TextStyle(fontSize: EnvironmentEcologyPdfList[PDFindex].SubTitle.length > 30 ? 10 : 14),),
+                                    )
+                                  ],
+                                )
                               ),
                             ),
                           ]
@@ -813,10 +977,10 @@ class CreateSList extends State<DocumentList>{
               ),
               SliverGrid(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 120.0,
+                  maxCrossAxisExtent: 150.0,
                   mainAxisSpacing: 2.0,
                   crossAxisSpacing: 2.0,
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.5,
                   //mainAxisExtent:
                 ),
                 delegate: SliverChildBuilderDelegate(
@@ -826,23 +990,46 @@ class CreateSList extends State<DocumentList>{
                           children: [
                             Container(
                               width: DW - 120,
-                              height: DH * 0.13,
+                              height: DH * 0.3,
                               margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               // margin: EdgeInsets.all(5),
                               alignment: Alignment.center,
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          MyPDFViewer(PdfUrl: ComprehensionPdfList[PDFindex].Url,
-                                              PdfTitle: ComprehensionPdfList[PDFindex].SubTitle,
-                                              context: context)
-                                  ));
+                                  if(ComprehensionPdfList[PDFindex].Url.substring(ComprehensionPdfList[PDFindex].Url.lastIndexOf(".")+1, ComprehensionPdfList[PDFindex].Url.length) == "pdf") {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            MyPDFViewer(PdfUrl: ComprehensionPdfList[PDFindex].Url,
+                                                PdfTitle: ComprehensionPdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }else{
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            WebViews(WebUrl: ComprehensionPdfList[PDFindex].Url,
+                                                Title: ComprehensionPdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }
                                 },
-                                child: Image.network(ComprehensionPdfList[PDFindex].ImgUrl),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: DH * 0.2,
+                                      padding: EdgeInsets.all(3),
+                                      child: Image.network(ComprehensionPdfList[PDFindex].ImgUrl),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.all(3),
+                                      child: Text(ComprehensionPdfList[PDFindex].SubTitle,
+                                        style: TextStyle(fontSize: ComprehensionPdfList[PDFindex].SubTitle.length > 30 ? 10 : 14),),
+                                    )
+                                  ],
+                                )
                               ),
                             ),
                           ]
@@ -870,10 +1057,10 @@ class CreateSList extends State<DocumentList>{
               ),
               SliverGrid(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 120.0,
+                  maxCrossAxisExtent: 150.0,
                   mainAxisSpacing: 2.0,
                   crossAxisSpacing: 2.0,
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.5,
                   //mainAxisExtent:
                 ),
                 delegate: SliverChildBuilderDelegate(
@@ -883,23 +1070,46 @@ class CreateSList extends State<DocumentList>{
                           children: [
                             Container(
                               width: DW - 120,
-                              height: DH * 0.13,
+                              height: DH * 0.3,
                               margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               // margin: EdgeInsets.all(5),
                               alignment: Alignment.center,
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          MyPDFViewer(PdfUrl: InterpersonalSkillsPdfList[PDFindex].Url,
-                                              PdfTitle: InterpersonalSkillsPdfList[PDFindex].SubTitle,
-                                              context: context)
-                                  ));
+                                  if(InterpersonalSkillsPdfList[PDFindex].Url.substring(InterpersonalSkillsPdfList[PDFindex].Url.lastIndexOf(".")+1, InterpersonalSkillsPdfList[PDFindex].Url.length) == "pdf") {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            MyPDFViewer(PdfUrl: InterpersonalSkillsPdfList[PDFindex].Url,
+                                                PdfTitle: InterpersonalSkillsPdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }else{
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            WebViews(WebUrl: InterpersonalSkillsPdfList[PDFindex].Url,
+                                                Title: InterpersonalSkillsPdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }
                                 },
-                                child: Image.network(InterpersonalSkillsPdfList[PDFindex].ImgUrl),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: DH * 0.2,
+                                      padding: EdgeInsets.all(3),
+                                      child: Image.network(InterpersonalSkillsPdfList[PDFindex].ImgUrl),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.all(3),
+                                      child: Text(InterpersonalSkillsPdfList[PDFindex].SubTitle,
+                                        style: TextStyle(fontSize: InterpersonalSkillsPdfList[PDFindex].SubTitle.length > 30 ? 10 : 14),),
+                                    )
+                                  ],
+                                )
                               ),
                             ),
                           ]
@@ -927,10 +1137,10 @@ class CreateSList extends State<DocumentList>{
               ),
               SliverGrid(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 120.0,
+                  maxCrossAxisExtent: 150.0,
                   mainAxisSpacing: 2.0,
                   crossAxisSpacing: 2.0,
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.5,
                   //mainAxisExtent:
                 ),
                 delegate: SliverChildBuilderDelegate(
@@ -940,23 +1150,46 @@ class CreateSList extends State<DocumentList>{
                           children: [
                             Container(
                               width: DW - 120,
-                              height: DH * 0.13,
+                              height: DH * 0.3,
                               margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               // margin: EdgeInsets.all(5),
                               alignment: Alignment.center,
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          MyPDFViewer(PdfUrl: LogicalReasoningPdfList[PDFindex].Url,
-                                              PdfTitle: LogicalReasoningPdfList[PDFindex].SubTitle,
-                                              context: context)
-                                  ));
+                                  if(LogicalReasoningPdfList[PDFindex].Url.substring(LogicalReasoningPdfList[PDFindex].Url.lastIndexOf(".")+1, LogicalReasoningPdfList[PDFindex].Url.length) == "pdf") {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            MyPDFViewer(PdfUrl: LogicalReasoningPdfList[PDFindex].Url,
+                                                PdfTitle: LogicalReasoningPdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }else{
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            WebViews(WebUrl: LogicalReasoningPdfList[PDFindex].Url,
+                                                Title: LogicalReasoningPdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }
                                 },
-                                child: Image.network(LogicalReasoningPdfList[PDFindex].ImgUrl),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: DH * 0.2,
+                                      padding: EdgeInsets.all(3),
+                                      child: Image.network(LogicalReasoningPdfList[PDFindex].ImgUrl),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.all(3),
+                                      child: Text(LogicalReasoningPdfList[PDFindex].SubTitle,
+                                        style: TextStyle(fontSize: LogicalReasoningPdfList[PDFindex].SubTitle.length > 30 ? 10 : 14),),
+                                    )
+                                  ],
+                                )
                               ),
                             ),
                           ]
@@ -984,10 +1217,10 @@ class CreateSList extends State<DocumentList>{
               ),
               SliverGrid(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 120.0,
+                  maxCrossAxisExtent: 150.0,
                   mainAxisSpacing: 2.0,
                   crossAxisSpacing: 2.0,
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.5,
                   //mainAxisExtent:
                 ),
                 delegate: SliverChildBuilderDelegate(
@@ -997,23 +1230,46 @@ class CreateSList extends State<DocumentList>{
                           children: [
                             Container(
                               width: DW - 120,
-                              height: DH * 0.13,
+                              height: DH * 0.3,
                               margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               // margin: EdgeInsets.all(5),
                               alignment: Alignment.center,
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          MyPDFViewer(PdfUrl: DecisionMakingPdfList[PDFindex].Url,
-                                              PdfTitle: DecisionMakingPdfList[PDFindex].SubTitle,
-                                              context: context)
-                                  ));
+                                  if(DecisionMakingPdfList[PDFindex].Url.substring(DecisionMakingPdfList[PDFindex].Url.lastIndexOf(".")+1, DecisionMakingPdfList[PDFindex].Url.length) == "pdf") {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            MyPDFViewer(PdfUrl: DecisionMakingPdfList[PDFindex].Url,
+                                                PdfTitle: DecisionMakingPdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }else{
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            WebViews(WebUrl: DecisionMakingPdfList[PDFindex].Url,
+                                                Title: DecisionMakingPdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }
                                 },
-                                child: Image.network(DecisionMakingPdfList[PDFindex].ImgUrl),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: DH * 0.2,
+                                      padding: EdgeInsets.all(3),
+                                      child: Image.network(DecisionMakingPdfList[PDFindex].ImgUrl),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.all(3),
+                                      child: Text(DecisionMakingPdfList[PDFindex].SubTitle,
+                                        style: TextStyle(fontSize: DecisionMakingPdfList[PDFindex].SubTitle.length > 30 ? 10 : 14),),
+                                    )
+                                  ],
+                                )
                               ),
                             ),
                           ]
@@ -1041,10 +1297,10 @@ class CreateSList extends State<DocumentList>{
               ),
               SliverGrid(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 120.0,
+                  maxCrossAxisExtent: 150.0,
                   mainAxisSpacing: 2.0,
                   crossAxisSpacing: 2.0,
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.5,
                   //mainAxisExtent:
                 ),
                 delegate: SliverChildBuilderDelegate(
@@ -1054,23 +1310,46 @@ class CreateSList extends State<DocumentList>{
                           children: [
                             Container(
                               width: DW - 120,
-                              height: DH * 0.13,
+                              height: DH * 0.3,
                               margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               // margin: EdgeInsets.all(5),
                               alignment: Alignment.center,
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          MyPDFViewer(PdfUrl: GMentalAbilityPdfList[PDFindex].Url,
-                                              PdfTitle: GMentalAbilityPdfList[PDFindex].SubTitle,
-                                              context: context)
-                                  ));
+                                  if(GMentalAbilityPdfList[PDFindex].Url.substring(GMentalAbilityPdfList[PDFindex].Url.lastIndexOf(".")+1, GMentalAbilityPdfList[PDFindex].Url.length) == "pdf") {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            MyPDFViewer(PdfUrl: GMentalAbilityPdfList[PDFindex].Url,
+                                                PdfTitle: GMentalAbilityPdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }else{
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            WebViews(WebUrl: GMentalAbilityPdfList[PDFindex].Url,
+                                                Title: GMentalAbilityPdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }
                                 },
-                                child: Image.network(GMentalAbilityPdfList[PDFindex].ImgUrl),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: DH * 0.2,
+                                      padding: EdgeInsets.all(3),
+                                      child: Image.network(GMentalAbilityPdfList[PDFindex].ImgUrl),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.all(3),
+                                      child: Text(GMentalAbilityPdfList[PDFindex].SubTitle,
+                                        style: TextStyle(fontSize: GMentalAbilityPdfList[PDFindex].SubTitle.length > 30 ? 10 : 14),),
+                                    )
+                                  ],
+                                )
                               ),
                             ),
                           ]
@@ -1098,10 +1377,10 @@ class CreateSList extends State<DocumentList>{
               ),
               SliverGrid(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 120.0,
+                  maxCrossAxisExtent: 150.0,
                   mainAxisSpacing: 2.0,
                   crossAxisSpacing: 2.0,
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.5,
                   //mainAxisExtent:
                 ),
                 delegate: SliverChildBuilderDelegate(
@@ -1111,23 +1390,46 @@ class CreateSList extends State<DocumentList>{
                           children: [
                             Container(
                               width: DW - 120,
-                              height: DH * 0.13,
+                              height: DH * 0.3,
                               margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               // margin: EdgeInsets.all(5),
                               alignment: Alignment.center,
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          MyPDFViewer(PdfUrl: BasicNumeracyPdfList[PDFindex].Url,
-                                              PdfTitle: BasicNumeracyPdfList[PDFindex].SubTitle,
-                                              context: context)
-                                  ));
+                                  if(BasicNumeracyPdfList[PDFindex].Url.substring(BasicNumeracyPdfList[PDFindex].Url.lastIndexOf(".")+1, BasicNumeracyPdfList[PDFindex].Url.length) == "pdf") {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            MyPDFViewer(PdfUrl: BasicNumeracyPdfList[PDFindex].Url,
+                                                PdfTitle: BasicNumeracyPdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }else{
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            WebViews(WebUrl: BasicNumeracyPdfList[PDFindex].Url,
+                                                Title: BasicNumeracyPdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }
                                 },
-                                child: Image.network(BasicNumeracyPdfList[PDFindex].ImgUrl),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: DH * 0.2,
+                                      padding: EdgeInsets.all(3),
+                                      child: Image.network(BasicNumeracyPdfList[PDFindex].ImgUrl),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.all(3),
+                                      child: Text(BasicNumeracyPdfList[PDFindex].SubTitle,
+                                        style: TextStyle(fontSize: BasicNumeracyPdfList[PDFindex].SubTitle.length > 30 ? 10 : 14),),
+                                    )
+                                  ],
+                                )
                               ),
                             ),
                           ]
@@ -1155,10 +1457,10 @@ class CreateSList extends State<DocumentList>{
               ),
               SliverGrid(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 120.0,
+                  maxCrossAxisExtent: 150.0,
                   mainAxisSpacing: 2.0,
                   crossAxisSpacing: 2.0,
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.5,
                   //mainAxisExtent:
                 ),
                 delegate: SliverChildBuilderDelegate(
@@ -1168,23 +1470,46 @@ class CreateSList extends State<DocumentList>{
                           children: [
                             Container(
                               width: DW - 120,
-                              height: DH * 0.13,
+                              height: DH * 0.3,
                               margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               // margin: EdgeInsets.all(5),
                               alignment: Alignment.center,
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          MyPDFViewer(PdfUrl: DataInterpretationPdfList[PDFindex].Url,
-                                              PdfTitle: DataInterpretationPdfList[PDFindex].SubTitle,
-                                              context: context)
-                                  ));
+                                  if(DataInterpretationPdfList[PDFindex].Url.substring(DataInterpretationPdfList[PDFindex].Url.lastIndexOf(".")+1, DataInterpretationPdfList[PDFindex].Url.length) == "pdf") {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            MyPDFViewer(PdfUrl: DataInterpretationPdfList[PDFindex].Url,
+                                                PdfTitle: DataInterpretationPdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }else{
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            WebViews(WebUrl: DataInterpretationPdfList[PDFindex].Url,
+                                                Title: DataInterpretationPdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }
                                 },
-                                child: Image.network(DataInterpretationPdfList[PDFindex].ImgUrl),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: DH * 0.2,
+                                      padding: EdgeInsets.all(3),
+                                      child: Image.network(DataInterpretationPdfList[PDFindex].ImgUrl),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.all(3),
+                                      child: Text(DataInterpretationPdfList[PDFindex].SubTitle,
+                                        style: TextStyle(fontSize: DataInterpretationPdfList[PDFindex].SubTitle.length > 30 ? 10 : 14),),
+                                    )
+                                  ],
+                                )
                               ),
                             ),
                           ]
@@ -1212,10 +1537,10 @@ class CreateSList extends State<DocumentList>{
               ),
               SliverGrid(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 120.0,
+                  maxCrossAxisExtent: 150.0,
                   mainAxisSpacing: 2.0,
                   crossAxisSpacing: 2.0,
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.5,
                   //mainAxisExtent:
                 ),
                 delegate: SliverChildBuilderDelegate(
@@ -1225,23 +1550,46 @@ class CreateSList extends State<DocumentList>{
                           children: [
                             Container(
                               width: DW - 120,
-                              height: DH * 0.13,
+                              height: DH * 0.3,
                               margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               // margin: EdgeInsets.all(5),
                               alignment: Alignment.center,
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          MyPDFViewer(PdfUrl: EnglishLanguagePdfList[PDFindex].Url,
-                                              PdfTitle: EnglishLanguagePdfList[PDFindex].SubTitle,
-                                              context: context)
-                                  ));
+                                  if(EnglishLanguagePdfList[PDFindex].Url.substring(EnglishLanguagePdfList[PDFindex].Url.lastIndexOf(".")+1, EnglishLanguagePdfList[PDFindex].Url.length) == "pdf") {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            MyPDFViewer(PdfUrl: EnglishLanguagePdfList[PDFindex].Url,
+                                                PdfTitle: EnglishLanguagePdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }else{
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            WebViews(WebUrl: EnglishLanguagePdfList[PDFindex].Url,
+                                                Title: EnglishLanguagePdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }
                                 },
-                                child: Image.network(EnglishLanguagePdfList[PDFindex].ImgUrl),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: DH * 0.2,
+                                      padding: EdgeInsets.all(3),
+                                      child: Image.network(EnglishLanguagePdfList[PDFindex].ImgUrl),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.all(3),
+                                      child: Text(EnglishLanguagePdfList[PDFindex].SubTitle,
+                                        style: TextStyle(fontSize: EnglishLanguagePdfList[PDFindex].SubTitle.length > 30 ? 10 : 14),),
+                                    )
+                                  ],
+                                )
                               ),
                             ),
                           ]
@@ -1269,10 +1617,11 @@ class CreateSList extends State<DocumentList>{
               ),
               SliverGrid(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 120.0,
+                  maxCrossAxisExtent: 150.0,
                   mainAxisSpacing: 2.0,
                   crossAxisSpacing: 2.0,
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.5,
+                  //mainAxisExtent:
                 ),
                 delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int PDFindex) {
@@ -1281,23 +1630,46 @@ class CreateSList extends State<DocumentList>{
                           children: [
                             Container(
                               width: DW - 120,
-                              height: DH * 0.13,
+                              height: DH * 0.3,
                               margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               // margin: EdgeInsets.all(5),
                               alignment: Alignment.center,
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          MyPDFViewer(PdfUrl: ComputerKnowledgePdfList[PDFindex].Url,
-                                              PdfTitle: ComputerKnowledgePdfList[PDFindex].SubTitle,
-                                              context: context)
-                                  ));
+                                  if(ComputerKnowledgePdfList[PDFindex].Url.substring(ComputerKnowledgePdfList[PDFindex].Url.lastIndexOf(".")+1, ComputerKnowledgePdfList[PDFindex].Url.length) == "pdf") {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            MyPDFViewer(PdfUrl: ComputerKnowledgePdfList[PDFindex].Url,
+                                                PdfTitle: ComputerKnowledgePdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }else{
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            WebViews(WebUrl: ComputerKnowledgePdfList[PDFindex].Url,
+                                                Title: ComputerKnowledgePdfList[PDFindex].SubTitle,
+                                                context: context)
+                                    ));
+                                  }
                                 },
-                                child: Image.network(ComputerKnowledgePdfList[PDFindex].ImgUrl),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        height: DH * 0.2,
+                                        padding: EdgeInsets.all(3),
+                                        child: Image.network(ComputerKnowledgePdfList[PDFindex].ImgUrl),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.all(3),
+                                        child: Text(ComputerKnowledgePdfList[PDFindex].SubTitle,
+                                          style: TextStyle(fontSize: ComputerKnowledgePdfList[PDFindex].SubTitle.length > 30 ? 10 : 14),),
+                                      )
+                                    ],
+                                  )
                               ),
                             ),
                           ]
@@ -1306,6 +1678,7 @@ class CreateSList extends State<DocumentList>{
                   childCount: ComputerKnowledgePdfList.length,
                 ),
               ),
+              //----------------------------------------
 
 
 
