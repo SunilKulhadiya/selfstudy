@@ -1,19 +1,19 @@
 import 'dart:ffi';
 
 class MainGroupDataModel {
-  final String ID;
-  final String Group;
+  final String GroupID;
+  final String GroupName;
 
 
   MainGroupDataModel({
-    required this.ID,
-    required this.Group,
+    required this.GroupID,
+    required this.GroupName,
   });
 
   factory MainGroupDataModel.fromJson(Map<String, dynamic> json) {
     return MainGroupDataModel(
-      Group: json['group_name'],
-      ID: json['id'],
+      GroupID: json['group_id'],
+      GroupName: json['group_name'],
     );
   }
 }

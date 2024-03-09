@@ -11,6 +11,7 @@ import 'package:selfstudy/drawer_menus/upload_image.dart';
 import 'package:selfstudy/drawer_menus/upload_notes.dart';
 import 'package:selfstudy/drawer_menus/upload_shorts.dart';
 import 'package:selfstudy/drawer_menus/upload_video.dart';
+import 'package:selfstudy/drawer_menus/upload_web_url.dart';
 
 class UploadFiles extends StatefulWidget {
 
@@ -42,7 +43,7 @@ class CreateSList extends State<UploadFiles>{
                 Tab(icon: Icon(Icons.video_collection_sharp)),
                 Tab(icon: Icon(Icons.image_sharp)),
                 Tab(icon: Icon(Icons.file_copy_sharp)),
-                Tab(icon: Icon(Icons.web_outlined)),
+                Tab(icon: Icon(Icons.language_sharp)),
               ],
             ),
             leading: new IconButton(
@@ -68,7 +69,7 @@ class CreateSList extends State<UploadFiles>{
                 child: UploadNotes(),
               ),
               Center(
-                child: UploadNotes(),
+                child: UploadWebUrl(),
               ),
             ],
           ),
