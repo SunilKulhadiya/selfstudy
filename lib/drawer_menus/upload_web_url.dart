@@ -83,7 +83,9 @@ class CreateSList extends State<UploadWebUrl>{
           'Content-Type': 'application/json',
         }
     );
-    MainGroups.add(SelectedGrpName);
+    setState(() {
+      MainGroups.add(SelectedGrpName);
+    });
     if (response.statusCode == 200) {
       print("--------------------Home : ${response.body}");
       List<dynamic> jsonData = json.decode(response.body);
@@ -92,15 +94,21 @@ class CreateSList extends State<UploadWebUrl>{
           print("--------------------***************************************** h : ${h}");
           MainGroupDataModel subTitle = new MainGroupDataModel(GroupID: h['group_id'],
               GroupName: h['group_name']);
-          MainGroups.add(subTitle);
+          setState(() {
+            MainGroups.add(subTitle);
+          });
         }
       MainGroupDataModel other = MainGroupDataModel(GroupID: "0",
                                   GroupName: "Other");
+      setState(() {
         MainGroups.add(other);
+      });
     } else {
       MainGroupDataModel other = MainGroupDataModel(GroupID: "0",
           GroupName: "Other");
-      MainGroups.add(other);
+      setState(() {
+        MainGroups.add(other);
+      });
     }
   }
   Future<void> fetchSubGroups() async {
@@ -122,7 +130,9 @@ class CreateSList extends State<UploadWebUrl>{
           'Content-Type': 'application/json',
         }
     );
-    SubGroups.add(SelectedSubGrpName);
+    setState(() {
+      SubGroups.add(SelectedSubGrpName);
+    });
     if (response.statusCode == 200) {
       print("--------------------sub group : ${response.body}");
       List<dynamic> jsonData = json.decode(response.body);
@@ -131,15 +141,21 @@ class CreateSList extends State<UploadWebUrl>{
         print("--------------------***************************************** h : ${h}");
         SubGroupDataModel subTitle = new SubGroupDataModel(SubGrpID: h['id'],
             SubGrpName: h['sub_group']);
-        SubGroups.add(subTitle);
+        setState(() {
+          SubGroups.add(subTitle);
+        });
       }
       SubGroupDataModel other = SubGroupDataModel(SubGrpID: "0",
           SubGrpName: "Other");
-      SubGroups.add(other);
+      setState(() {
+        SubGroups.add(other);
+      });
     } else {
       SubGroupDataModel other = SubGroupDataModel(SubGrpID: "0",
           SubGrpName: "Other");
-      SubGroups.add(other);
+      setState(() {
+        SubGroups.add(other);
+      });
     }
     //----
   }
@@ -147,7 +163,7 @@ class CreateSList extends State<UploadWebUrl>{
   Future<void> SaveDataOnServer(String URL, String GrpNme,
       String SubGrpNme) async {
     var body = {
-      "ACTION": "11",
+      "ACTION": "15",
       "ROWNO": 0,
       "GROUPID": SelectedGrpName.GroupID,
       "GROUPNAME": GrpNme,
@@ -431,8 +447,8 @@ class CreateSList extends State<UploadWebUrl>{
 //--------------------------------
   GrpDropdownButton(BuildContext context) {
     print("---------------Grp         DropdownButton-----------------------------------------------");
+    print("-------------------------------------${MainGroups.length}");
     final double DW = MediaQuery.of(context).size.width;
-
     if(GrpDWBTN == 0){
       return Container(
         width: DW * 0.95,
@@ -479,7 +495,6 @@ class CreateSList extends State<UploadWebUrl>{
 
         ),
       );
-
     }else{
       return Container(
         width: DW * 0.95,
@@ -504,6 +519,7 @@ class CreateSList extends State<UploadWebUrl>{
               SelectedGrpName = newValue!;
               GrpDWBTN = 1;
             });
+            print("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
             fetchSubGroups();
           },
           value: SelectedGrpName,

@@ -48,7 +48,8 @@ dependencies:
   webview_flutter: ^2.3.0
   widget_zoom: ^0.0.3
   image_picker: ^0.8.6+1
-
+  intl: ^0.18.1
+  file_picker: ^5.2.10
 
 dev_dependencies:
   flutter_test:
