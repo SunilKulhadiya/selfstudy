@@ -33,6 +33,8 @@ class CreateSList extends State<UploadFiles>{
     final double DH = MediaQuery.of(context).size.height;
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
+
       home: DefaultTabController(
         length: 5,
         child: Scaffold(
@@ -52,7 +54,6 @@ class CreateSList extends State<UploadFiles>{
             ),
             title: const Text('Upload'),
             backgroundColor: Color.fromRGBO(117, 254, 250, 51),
-
           ),
           body: const TabBarView(
             children: [

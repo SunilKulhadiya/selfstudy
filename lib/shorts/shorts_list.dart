@@ -9,6 +9,8 @@ import 'package:selfstudy/module/data_module.dart';
 import 'package:selfstudy/shorts/youtub_player.dart';
 import 'package:selfstudy/module/sub_title_data_model.dart';
 import 'package:selfstudy/module/author_data_model.dart';
+
+import '../app_config.dart';
 //import 'package:selfstudy/generalTools/general_tools.dart';
 //import 'package:selfstudy/repository/api_request.dart';
 
@@ -81,7 +83,7 @@ class CreateSList extends State<ShortsList>{
 
     // you can replace your api link with this link
     final response = await
-    http.post(Uri.parse('https://sewabhartidabra.in/APIs/Fetch_SelfStudy.php'),
+    http.post(Uri.parse(AppConfig.BASE_API_URL+'Fetch_SelfStudy.php'),
         body: jsonBody,
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json',}
     );
@@ -112,7 +114,7 @@ class CreateSList extends State<ShortsList>{
 
     // you can replace your api link with this link
     final response1 = await
-    http.post(Uri.parse('https://sewabhartidabra.in/APIs/Fetch_SelfStudy.php'),
+    http.post(Uri.parse(AppConfig.BASE_API_URL+'Fetch_SelfStudy.php'),
         body: jsonBody1,
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json',}
     );
@@ -158,7 +160,7 @@ class CreateSList extends State<ShortsList>{
 
     // you can replace your api link with this link
     final response = await
-    http.post(Uri.parse('https://sewabhartidabra.in/APIs/Fetch_SelfStudy.php'),
+    http.post(Uri.parse(AppConfig.BASE_API_URL+'Fetch_SelfStudy.php'),
         body: jsonBody,
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json',}
     );

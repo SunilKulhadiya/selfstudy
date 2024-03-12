@@ -70,7 +70,7 @@ class CreateSList extends State<TermsConditions>{
                   style: TextStyle(fontSize: 18, color: Colors.black),
                   children: const <TextSpan>[
                     TextSpan(text: ' Shorts, Tutorials, Images, Notes & Websites.', style: TextStyle(fontWeight: FontWeight.bold)),
-                    TextSpan(text: ' Here you can also watch your uploads without any instructions.'),
+                    TextSpan(text: ' Here you can also watch your uploads without any instructions and make views.'),
                   ],
                 ),
               )

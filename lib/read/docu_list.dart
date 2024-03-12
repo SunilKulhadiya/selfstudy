@@ -114,27 +114,33 @@ class CreateSList extends State<DocumentList>{
     } else {
       CarouselDataModel CDM = new CarouselDataModel(id: 0,
           title: "",
+          Subtitle: "",
           ImgUrl: AppConfig.CAROUSE_URL + 'India_EtoW_NtoS_Length.jpg',
           GroupName: '',
           GroupID: "0",
+          SubGroupID: '0',
           Approve: "1",
-          Page: "0");
+          Page: "0", ImgDeco: 0);
       CaroUselData.add(CDM);
       CDM = new CarouselDataModel(id: 0,
           title: "",
+          Subtitle: "",
           ImgUrl: AppConfig.CAROUSE_URL + 'ArabSagarMeMilneBaliNadiyan.jpg',
           GroupName: '',
           GroupID: "0",
+          SubGroupID: '0',
           Approve: "1",
-          Page: "0");
+          Page: "0", ImgDeco: 0);
       CaroUselData.add(CDM);
       CDM = new CarouselDataModel(id: 0,
           title: "",
+          Subtitle: "",
           ImgUrl: AppConfig.CAROUSE_URL + 'ArabSagarMeMilneBaliNadiyan.jpg',
           GroupName: '',
           GroupID: "0",
+          SubGroupID: '0',
           Approve: "1",
-          Page: "0");
+          Page: "0", ImgDeco: 0);
       CaroUselData.add(CDM);
     }
     //-------------------------------
@@ -147,7 +153,7 @@ class CreateSList extends State<DocumentList>{
 
     // you can replace your api link with this link
     response = await
-    http.post(Uri.parse('https://sewabhartidabra.in/APIs/Fetch_SelfStudy.php'),
+    http.post(Uri.parse(AppConfig.BASE_API_URL+'Fetch_SelfStudy.php'),
         body: jsonBody,
         headers: {
           'Accept': 'application/json',
@@ -180,8 +186,7 @@ class CreateSList extends State<DocumentList>{
 
         // you can replace your api link with this link
         response = await
-        http.post(
-            Uri.parse('https://sewabhartidabra.in/APIs/Fetch_SelfStudy.php'),
+        http.post(Uri.parse(AppConfig.BASE_API_URL+'Fetch_SelfStudy.php'),
             body: jsonBody,
             headers: {
               'Accept': 'application/json',
@@ -349,7 +354,6 @@ class CreateSList extends State<DocumentList>{
                       Container(
                         alignment: Alignment.center,
                         height: 200,
-                        width: double.infinity,
                         margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                         child: CarouselSlider(
                           items: CaroUselData.map((fileImage) {
@@ -366,9 +370,10 @@ class CreateSList extends State<DocumentList>{
                                       margin: EdgeInsets.all(6.0),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8.0),
+                                        color: Colors.white,
                                         image: DecorationImage(
                                           image: NetworkImage(fileImage.ImgUrl),
-                                          fit: BoxFit.cover,
+                                          fit: BoxFit.fill,
                                         ),
                                       ),
                                     ),

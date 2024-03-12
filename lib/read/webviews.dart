@@ -1,13 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
-import '../app_config.dart';
 
 class WebViews extends StatefulWidget {
   final String WebUrl;

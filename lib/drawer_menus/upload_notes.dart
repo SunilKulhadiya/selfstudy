@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:image_picker/image_picker.dart';
@@ -24,15 +25,15 @@ class UploadNotes extends StatefulWidget {
   @override
   State<UploadNotes> createState() => CreateSList();
 }
-class CreateSList extends State<UploadNotes>{
+class CreateSList extends State<UploadNotes> with TickerProviderStateMixin{
+  late AnimationController Progresscontroller;
   List<MainGroupDataModel> MainGroups = [];
   List<SubGroupDataModel> SubGroups = [];
   List<ServerResponseModel> ServerRespons = [];
 
-  File? galleryFile;
-  final picker = ImagePicker();
+  File? filePdf = null;
 
-  int GrpDWBTN = 0, SubGrpDWBTN = 0;
+  int GrpDWBTN = 0, SubGrpDWBTN = 0, isUploading = 0;
   late MainGroupDataModel SelectedGrpName = MainGroupDataModel(GroupID: "0",
       GroupName: "Select Group");
   late SubGroupDataModel SelectedSubGrpName = SubGroupDataModel(SubGrpID: "0",
@@ -61,7 +62,17 @@ class CreateSList extends State<UploadNotes>{
     fetchGroups();
     GrpNameController.addListener(GrpNameChanged);
     SubTitleController.addListener(SubGrpTitleChanged);
+    Progresscontroller = AnimationController(
+      /// [AnimationController]s can be created with `vsync: this` because of
+      /// [TickerProviderStateMixin].
+      vsync: this,
+      duration: const Duration(seconds: 5),
+    )..addListener(() {
+      setState(() {});
+    });
+    Progresscontroller.repeat(reverse: false);
   }
+
   Future<void> fetchGroups() async {
     var body = {
       "ACTION": "9",
@@ -158,11 +169,14 @@ class CreateSList extends State<UploadNotes>{
   //----------------------
   Future<void> SaveDataOnServer(File URL, String GrpNme,
       String SubGrpNme) async {
+    setState(() {
+      isUploading == 1;
+    });
     String formattedDate = dateFormat.format(DateTime.now());
     String Ext = URL!.path;
     Ext = Ext.substring(Ext.lastIndexOf(".")+1, Ext.length);
     String NewFileName = "G"+SelectedGrpName.GroupID+"SG"+SelectedSubGrpName.SubGrpID+"_"+formattedDate+"."+Ext;
-    final request = http.MultipartRequest('POST', Uri.parse(AppConfig.BASE_API_URL + 'Upload_Videos.php'))
+    final request = http.MultipartRequest('POST', Uri.parse(AppConfig.BASE_API_URL + 'Upload_Notes.php'))
       ..fields['NEWFILENAME'] = NewFileName
       ..files.add(await http.MultipartFile.fromPath('myFile', URL!.path));
     final response = await request.send();
@@ -179,13 +193,13 @@ class CreateSList extends State<UploadNotes>{
       print("33333333333333333333333333>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Map ${ServerRespons[0].Code}");
       if(ServerRespons[0].Code == "200"){
         var body = {
-          "ACTION": "12",
+          "ACTION": "14",
           "ROWNO": 0,
           "GROUPID": SelectedGrpName.GroupID,
           "GROUPNAME": GrpNme,
           "SUBGROUPID": SelectedSubGrpName.SubGrpID,
           "SUBGROUPNAME": SubGrpNme,
-          "IMGURL": "https://sewabhartidabra.in/Self_Study/Video/"+NewFileName,
+          "IMGURL": AppConfig.BASE_URL_PACKAGE+"Notes/"+NewFileName,
           "SELECTEDGROUP": SelectedGrpName.GroupName,
           "SELECTEDSUBGROUP": SelectedSubGrpName.SubGrpName
         };
@@ -209,6 +223,7 @@ class CreateSList extends State<UploadNotes>{
                     .toList();
             ServerMessage = ServerRespons[0].Response;
             ServerRespons = [];
+            isUploading == 0;
           });
 
           print("--------------------sub group : ${jsonData1[0].rsponse}");
@@ -227,6 +242,7 @@ class CreateSList extends State<UploadNotes>{
   @override
   void dispose() {
     SubTitleController.dispose();
+    Progresscontroller.dispose();
     super.dispose();
   }
 
@@ -245,9 +261,9 @@ class CreateSList extends State<UploadNotes>{
                   child: Container(
                     alignment: Alignment.center,
                     margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                    child: Text("Tutorial",
+                    child: Text("Notes",
                       style: TextStyle(fontWeight: FontWeight.w700, fontSize: 22,
-                          color: Color.fromRGBO(189, 183, 8, 8)),),
+                          color: Color.fromRGBO(254, 254, 254, 51)),),
                   ),
                 ),
                 SliverToBoxAdapter(
@@ -261,14 +277,23 @@ class CreateSList extends State<UploadNotes>{
                       child: Column(
                           children: [
                             Container(
-                              child: galleryFile == null ?
+                              child: filePdf == null ?
                               Icon(Icons.upload_file_rounded, size: 200,) :
                               Container(
-                                width: DW * 0.4,
+                                width: DW * 0.3,
                                 height: DW * 0.4,
                                 alignment: Alignment.center,
-                                child: MyVideoPlayer(VideoUrl: galleryFile, context: context),
+                                child: PDFView(
+                                  filePath: filePdf!.path,
+                                ),
                               ),
+                            ),
+                            Container(
+                              alignment: Alignment.topCenter,
+                              margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                              child: Text("Touch me", style:
+                              TextStyle(fontSize: filePdf == null ? 15 : 25,
+                                  fontWeight: filePdf == null ? FontWeight.normal : FontWeight.bold),),
                             ),
                           ]
                       ),
@@ -370,7 +395,7 @@ class CreateSList extends State<UploadNotes>{
                                 print("-------------------------------------Submit");
                                 if(SelectedGrpName.GroupName == 'Select Group' ||
                                     SelectedSubGrpName.SubGrpName == 'Select Title' ||
-                                    galleryFile == null){
+                                    filePdf == null){
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(content: Text('All fields are required.....')));
                                 }else{
@@ -380,13 +405,18 @@ class CreateSList extends State<UploadNotes>{
                                   if(SelectedSubGrpName.SubGrpName != 'Other'){
                                     TEXTSubGrpTitle = SelectedSubGrpName.SubGrpName;
                                   }
-                                  SaveDataOnServer(galleryFile!, TEXTGrpName, TEXTSubGrpTitle);
+                                  SaveDataOnServer(filePdf!, TEXTGrpName, TEXTSubGrpTitle);
                                 }
                               },
-                              child: Text(ServerMessage,
+                              child: isUploading == 0 ? Text(ServerMessage,
                                 style: TextStyle(fontSize: 22,
-                                    color: Colors.white),
+                                    color: Colors.white)) :
+                                CircularProgressIndicator(
+                                value: Progresscontroller.value,
+                                semanticsLabel: 'Circular progress indicator',
+                                valueColor:AlwaysStoppedAnimation<Color>(Colors.greenAccent),
                               ),
+
                             )
                         ),
                       ]
@@ -416,7 +446,23 @@ class CreateSList extends State<UploadNotes>{
       ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
           const SnackBar(content: Text('Nothing is selected')));
     }else{
-
+      if(filePdf == null){
+        setState(() {
+          filePdf = File(result.files.first.path as String);
+        });
+      }else {
+        setState(() {
+          filePdf = null;
+        });
+        //PlatformFile Pfile = result.files.first;
+        Future.delayed(Duration(seconds: 2), () {
+          setState(() {
+            filePdf = File(result.files.first.path as String);
+          });
+        });
+      }
+      print("-----------------------------------Pdf : ${result.files.first.path}");
+      print("-----------------------------------Pdf : ${filePdf}");
     }
   }
 

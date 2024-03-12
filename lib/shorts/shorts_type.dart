@@ -117,27 +117,33 @@ class CreateSList extends State<ShortsType>{
     else {
       CarouselDataModel CDM = new CarouselDataModel(id: 0,
           title: "",
+          Subtitle: "",
           ImgUrl: AppConfig.CAROUSE_URL + 'India_EtoW_NtoS_Length.jpg',
           GroupName: '',
           GroupID: "0",
+          SubGroupID: "0",
           Approve: "1",
-          Page: "0");
+          Page: "0", ImgDeco: 0);
       CaroUselData2.add(CDM);
       CDM = new CarouselDataModel(id: 0,
           title: "",
+          Subtitle: "",
           ImgUrl: AppConfig.CAROUSE_URL + 'ArabSagarMeMilneBaliNadiyan.jpg',
           GroupName: '',
           GroupID: "0",
+          SubGroupID: "0",
           Approve: "1",
-          Page: "0");
+          Page: "0", ImgDeco: 0);
       CaroUselData2.add(CDM);
       CDM = new CarouselDataModel(id: 0,
           title: "",
+          Subtitle: "",
           ImgUrl: AppConfig.CAROUSE_URL + 'ArabSagarMeMilneBaliNadiyan.jpg',
           GroupName: '',
           GroupID: "0",
+          SubGroupID: "0",
           Approve: "1",
-          Page: "0");
+          Page: "0", ImgDeco: 0);
       CaroUselData2.add(CDM);
     }
     //-------------------------------Fetch Main Group
@@ -374,7 +380,7 @@ class CreateSList extends State<ShortsType>{
                                         borderRadius: BorderRadius.circular(8.0),
                                         image: DecorationImage(
                                           image: NetworkImage(fileImage.ImgUrl),
-                                          fit: BoxFit.cover,
+                                          fit: BoxFit.fill,
                                         ),
                                       ),
                                     ),

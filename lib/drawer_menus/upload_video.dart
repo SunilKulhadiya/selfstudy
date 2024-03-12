@@ -184,7 +184,7 @@ class CreateSList extends State<UploadVideo>{
           "GROUPNAME": GrpNme,
           "SUBGROUPID": SelectedSubGrpName.SubGrpID,
           "SUBGROUPNAME": SubGrpNme,
-          "IMGURL": "https://sewabhartidabra.in/Self_Study/Video/"+NewFileName,
+          "IMGURL": AppConfig.BASE_URL_PACKAGE+"Video/"+NewFileName,
           "SELECTEDGROUP": SelectedGrpName.GroupName,
           "SELECTEDSUBGROUP": SelectedSubGrpName.SubGrpName
         };
@@ -450,6 +450,14 @@ class CreateSList extends State<UploadVideo>{
     setState(
           () {
         if (xfilePick != null) {
+          setState(() {
+            galleryFile = null;
+          });
+          Future.delayed(Duration(seconds: 2), () {
+            setState(() {
+              galleryFile = File(pickedFile!.path);
+            });
+          });
           galleryFile = File(pickedFile!.path);
           print("--------------------------------------------------------------------------");
           print(galleryFile);

@@ -89,16 +89,16 @@ class CreateSList extends State<DrawerMenu>{
                         UploadFiles()),);
                   },
                 ),
-                // ListTile(
-                //   leading: Icon(Icons.workspaces),
-                //   title: Text('Workflow'),
-                //   onTap: (){},
-                // ),
-                // ListTile(
-                //   leading: Icon(Icons.update),
-                //   title: Text('Updates'),
-                //   onTap: (){},
-                // ),
+                ListTile(
+                  leading: Icon(Icons.window),
+                  title: Text("Your Upload"),
+                  onTap: (){
+                    /// Close Navigation drawer before
+                    // Navigator.pop(context);
+                    // Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                    //     UploadFiles()),);
+                  },
+                ),
                 const Divider(color: Colors.black45,),
                 // ListTile(
                 //   leading: Icon(Icons.account_tree_outlined),

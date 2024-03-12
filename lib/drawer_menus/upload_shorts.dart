@@ -23,15 +23,16 @@ class UploadShorts extends StatefulWidget {
   @override
   State<UploadShorts> createState() => CreateSList();
 }
-class CreateSList extends State<UploadShorts>{
+class CreateSList extends State<UploadShorts> with TickerProviderStateMixin{
+  late AnimationController Progresscontroller;
   List<MainGroupDataModel> MainGroups = [];
   List<SubGroupDataModel> SubGroups = [];
   List<ServerResponseModel> ServerRespons = [];
 
-  File? galleryFile;
+  File? galleryFile = null;
   final picker = ImagePicker();
 
-  int GrpDWBTN = 0, SubGrpDWBTN = 0;
+  int GrpDWBTN = 0, SubGrpDWBTN = 0, isUploading = 0;
   late MainGroupDataModel SelectedGrpName = MainGroupDataModel(GroupID: "0",
       GroupName: "Select Group");
   late SubGroupDataModel SelectedSubGrpName = SubGroupDataModel(SubGrpID: "0",
@@ -60,6 +61,7 @@ class CreateSList extends State<UploadShorts>{
     fetchGroups();
     GrpNameController.addListener(GrpNameChanged);
     SubTitleController.addListener(SubGrpTitleChanged);
+    //SubmitProgressIndicator(0);
   }
   Future<void> fetchGroups() async {
     var body = {
@@ -155,8 +157,40 @@ class CreateSList extends State<UploadShorts>{
     //----
   }
   //----------------------
+  Future<void> SubmitProgressIndicator(int duration)async {
+    if(duration == 0) {
+      Progresscontroller = AnimationController(
+        /// [AnimationController]s can be created with `vsync: this` because of
+        /// [TickerProviderStateMixin].
+        vsync: this,
+        duration: null,
+      )
+        ..addListener(() {
+          setState(() {});
+        });
+      Progresscontroller.repeat(reverse: false);
+    }else{
+      Progresscontroller = AnimationController(
+        /// [AnimationController]s can be created with `vsync: this` because of
+        /// [TickerProviderStateMixin].
+        vsync: this,
+        duration: Duration(seconds: 25),
+      )
+        ..addListener(() {
+          setState(() {});
+        });
+      Progresscontroller.repeat(reverse: false);
+    }
+
+  }
+  //----------------------
   Future<void> SaveDataOnServer(File URL, String GrpNme,
       String SubGrpNme) async {
+    setState(() {
+      ServerMessage = "Uploading in progress......";
+      isUploading = 1;
+    });
+    //SubmitProgressIndicator(1);
     String formattedDate = dateFormat.format(DateTime.now());
     String Ext = URL!.path;
     Ext = Ext.substring(Ext.lastIndexOf(".")+1, Ext.length);
@@ -184,7 +218,7 @@ class CreateSList extends State<UploadShorts>{
           "GROUPNAME": GrpNme,
           "SUBGROUPID": SelectedSubGrpName.SubGrpID,
           "SUBGROUPNAME": SubGrpNme,
-          "IMGURL": "https://sewabhartidabra.in/Self_Study/Shorts/"+NewFileName,
+          "IMGURL": AppConfig.BASE_URL_PACKAGE+"Shorts/"+NewFileName,
           "SELECTEDGROUP": SelectedGrpName.GroupName,
           "SELECTEDSUBGROUP": SelectedSubGrpName.SubGrpName
         };
@@ -208,6 +242,8 @@ class CreateSList extends State<UploadShorts>{
                     .toList();
             ServerMessage = ServerRespons[0].Response;
             ServerRespons = [];
+            isUploading = 0;
+            //SubmitProgressIndicator(0);
           });
 
           print("--------------------sub group : ${jsonData1[0].rsponse}");
@@ -217,6 +253,16 @@ class CreateSList extends State<UploadShorts>{
               ServerMessage = "Submite";
             });
           });
+        }else{
+          setState(() {
+            ServerMessage = "Try again, something went wrong.";
+          });
+          Future.delayed(Duration(seconds: 2), () {
+            setState(() {
+              ServerMessage = "Submite";
+            });
+          });
+
         }
       }
     }
@@ -260,20 +306,21 @@ class CreateSList extends State<UploadShorts>{
               child: Column(
               children: [
               Container(
-              child: galleryFile == null ?
-              Icon(Icons.video_camera_back_outlined, size: 200,) :
-              Container(
-              width: DW * 0.4,
-              height: DW * 0.4,
-              alignment: Alignment.center,
-              child: MyVideoPlayer(VideoUrl: galleryFile, context: context),
+                child: galleryFile == null ?
+                Icon(Icons.video_camera_back_outlined, size: 200,) :
+                Container(
+                  width: DW * 0.4,
+                  height: DW * 0.4,
+                  alignment: Alignment.center,
+                  child: galleryFile == null ? Icon(Icons.video_camera_back_outlined, size: 200,) :
+                    MyVideoPlayer(VideoUrl: galleryFile, context: context),
+                ),
               ),
-              ),
               Container(
-              alignment: Alignment.topCenter,
-              child: Text("Touch me", style:
-              TextStyle(fontSize: galleryFile == null ? 15 : 25,
-              fontWeight: galleryFile == null ? FontWeight.normal : FontWeight.bold),),
+                alignment: Alignment.topCenter,
+                child: Text("Touch me", style:
+                TextStyle(fontSize: galleryFile == null ? 15 : 25,
+                fontWeight: galleryFile == null ? FontWeight.normal : FontWeight.bold),),
               ),
             ]
               ),
@@ -385,13 +432,18 @@ class CreateSList extends State<UploadShorts>{
                             if(SelectedSubGrpName.SubGrpName != 'Other'){
                               TEXTSubGrpTitle = SelectedSubGrpName.SubGrpName;
                             }
-                            SaveDataOnServer(galleryFile!, TEXTGrpName, TEXTSubGrpTitle);
+                            if(galleryFile == null){
+                              ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
+                                  const SnackBar(content: Text('Please select file or sync in progress...')));
+                            }else {
+                              SaveDataOnServer(
+                                  galleryFile!, TEXTGrpName, TEXTSubGrpTitle);
+                            }
                           }
                         },
                         child: Text(ServerMessage,
-                          style: TextStyle(fontSize: 22,
-                              color: Colors.white),
-                        ),
+                            style: TextStyle(fontSize: 22,
+                                color: Colors.white)),
                       )
                   ),
                 ]
@@ -442,16 +494,34 @@ class CreateSList extends State<UploadShorts>{
   }
 
   Future getVideo(ImageSource img,) async {
+    print("----------------------------galleryFile----------------------------------------------${galleryFile}");
     final pickedFile = await picker.pickVideo(
         source: img,
         preferredCameraDevice: CameraDevice.front,
-        maxDuration: const Duration(minutes: 1));
+        maxDuration: const Duration(minutes: 1)
+    );
     XFile? xfilePick = pickedFile;
     setState(
           () {
         if (xfilePick != null) {
-          galleryFile = File(pickedFile!.path);
-          print("--------------------------------------------------------------------------");
+          if(galleryFile == null){
+            setState(() {
+              galleryFile = File(pickedFile!.path);
+            });
+          }else {
+            setState(() {
+              galleryFile = null;
+            });
+            print(
+                "----------------------------galleryFile----------------------------------------------${galleryFile}");
+            Future.delayed(Duration(seconds: 2), () {
+              setState(() {
+                galleryFile = File(pickedFile!.path);
+              });
+            });
+          }
+          print("----------------------------pickedFile!.path----------------------------------------------${pickedFile!.path}");
+          print("----------------------------xfilePick----------------------------------------------${xfilePick.path}");
           print(galleryFile);
 
         } else {
@@ -463,8 +533,6 @@ class CreateSList extends State<UploadShorts>{
   }
 //--------------------------------
   GrpDropdownButton(BuildContext context) {
-    print("---------------Grp         DropdownButton-----------------------------------------------");
-    print("-------------------------------------${MainGroups.length}");
     final double DW = MediaQuery.of(context).size.width;
     if(GrpDWBTN == 0){
       return Container(
@@ -563,7 +631,6 @@ class CreateSList extends State<UploadShorts>{
   }
 //--------------------------------
   SubGrpDropdownButton(BuildContext context) {
-    print("---------------SubGrpDropdownButton-----------------------------------------------");
     final double DW = MediaQuery.of(context).size.width;
 
     if(SubGrpDWBTN == 0){

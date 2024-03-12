@@ -59,16 +59,19 @@ class CreateHomePage extends State<Home>{
       print("-------------------Home-VDModel : ${ShortsData}");
     } else {
       CarouselDataModel CDM = new CarouselDataModel(id: 0, title: "",
-                              ImgUrl: AppConfig.CAROUSE_URL+'India_EtoW_NtoS_Length.jpg',
-                              GroupName: '', GroupID: "0", Approve: "1", Page: "0");
+          ImgUrl: AppConfig.CAROUSE_URL+'India_EtoW_NtoS_Length.jpg',
+          GroupName: '', GroupID: "0", Approve: "1", Page: "0", ImgDeco: 0,
+          Subtitle: "", SubGroupID: "0");
       CaroUselData.add(CDM);
       CDM = new CarouselDataModel(id: 0, title: "",
           ImgUrl: AppConfig.CAROUSE_URL+'ArabSagarMeMilneBaliNadiyan.jpg',
-          GroupName: '', GroupID: "0", Approve: "1", Page: "0");
+          GroupName: '', GroupID: "0", Approve: "1", Page: "0", ImgDeco: 0,
+          Subtitle: "", SubGroupID: "0");
       CaroUselData.add(CDM);
       CDM = new CarouselDataModel(id: 0, title: "",
           ImgUrl: AppConfig.CAROUSE_URL+'ArabSagarMeMilneBaliNadiyan.jpg',
-          GroupName: '', GroupID: "0", Approve: "1", Page: "0");
+          GroupName: '', GroupID: "0", Approve: "1", Page: "0", ImgDeco: 0,
+          Subtitle: "", SubGroupID: "0");
       CaroUselData.add(CDM);
     }
     //-------------------------------
@@ -222,7 +225,7 @@ class CreateHomePage extends State<Home>{
                                             borderRadius: BorderRadius.circular(8.0),
                                             image: DecorationImage(
                                               image: NetworkImage(fileImage.ImgUrl),
-                                              fit: BoxFit.cover,
+                                              fit: BoxFit.fill,
                                             ),
                                           ),
                                         ),

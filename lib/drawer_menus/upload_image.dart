@@ -159,6 +159,9 @@ class CreateSList extends State<UploadImage>{
   //----------------------
   Future<void> SaveDataOnServer(File URL, String GrpNme,
       String SubGrpNme) async {
+    setState(() {
+      ServerMessage = "Uploading in progress.....";
+    });
     String formattedDate = dateFormat.format(DateTime.now());
     String Ext = URL!.path;
     Ext = Ext.substring(Ext.lastIndexOf(".")+1, Ext.length);
@@ -186,7 +189,7 @@ class CreateSList extends State<UploadImage>{
           "GROUPNAME": GrpNme,
           "SUBGROUPID": SelectedSubGrpName.SubGrpID,
           "SUBGROUPNAME": SubGrpNme,
-          "IMGURL": "https://sewabhartidabra.in/Self_Study/Carousel/"+NewFileName,
+          "IMGURL": AppConfig.CAROUSE_URL+NewFileName,
           "SELECTEDGROUP": SelectedGrpName.GroupName,
           "SELECTEDSUBGROUP": SelectedSubGrpName.SubGrpName
         };
@@ -215,6 +218,15 @@ class CreateSList extends State<UploadImage>{
           print("--------------------sub group : ${jsonData1[0].rsponse}");
 
           Future.delayed(Duration(seconds: 7), () {
+            setState(() {
+              ServerMessage = "Submite";
+            });
+          });
+        }else{
+          setState(() {
+            ServerMessage = "Try again, something went wrong..";
+          });
+          Future.delayed(Duration(seconds: 1), () {
             setState(() {
               ServerMessage = "Submite";
             });
@@ -450,9 +462,10 @@ class CreateSList extends State<UploadImage>{
           const SnackBar(content: Text('Nothing is selected')));
     }else {
       print(">>>>>>>>>>>>>>>>>>>>>>>>>> Image Path : ${img.path}");
-      var path = img.path;
-      var lastSeparator = path.lastIndexOf(Platform.pathSeparator);
+      var Fpath = img.path;
+      var lastSeparator = Fpath.lastIndexOf(Platform.pathSeparator);
       print(">>>>>>>>>>>>>>>>>>>>>>>>>> lastSeparator : ${lastSeparator}");
+      print(">>>>>>>>>>>>>>>>>>>>>>>>>> Fpath : ${Fpath}");
       // var newPath = path.substring(0, lastSeparator + 1) + "newFileName";
       // img.rename(newPath);
       setState(() {

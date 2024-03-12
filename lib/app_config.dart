@@ -17,14 +17,16 @@ class AppConfig {
   static const DOMAIN_PATH = "sewabhartidabra.in"; //localhost
 
   //do not configure these below
+  static const String PACKAGE = "Self_Study";
   static const String API_ENDPATH = "APIs";
   static const String PROTOCOL = "https://";
   static const String RAW_BASE_URL = "${PROTOCOL}${DOMAIN_PATH}";
   static const String BASE_URL = "${RAW_BASE_URL}/${API_ENDPATH}/";
   static const String BASE_API_URL = "${RAW_BASE_URL}/${API_ENDPATH}/";
+  static const String BASE_URL_PACKAGE = "${RAW_BASE_URL}/${PACKAGE}/";
   static const String CAROUSE_BASE_URL = "/Self_Study/Carousel/";
   static const String LOGO_URL = "${RAW_BASE_URL}/Self_Study/Logo_Images/";
-  static const String CAROUSE_URL = "${PROTOCOL}${DOMAIN_PATH}${CAROUSE_BASE_URL}";
+  static const String CAROUSE_URL = "${RAW_BASE_URL}${CAROUSE_BASE_URL}";
 
   @override
   String toString() {
