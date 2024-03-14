@@ -12,10 +12,15 @@ import 'package:selfstudy/drawer_menus/upload_notes.dart';
 import 'package:selfstudy/drawer_menus/upload_shorts.dart';
 import 'package:selfstudy/drawer_menus/upload_video.dart';
 import 'package:selfstudy/drawer_menus/upload_web_url.dart';
+import 'package:selfstudy/drawer_menus/user_uploads/user_upload_shorts.dart';
 
 class UploadFiles extends StatefulWidget {
+  final int Route;
+  final BuildContext context;
 
-  const UploadFiles({super.key});
+  const UploadFiles({super.key,
+    required this.Route,
+    required this.context});
 
   @override
   State<UploadFiles> createState() => CreateSList();
@@ -31,7 +36,6 @@ class CreateSList extends State<UploadFiles>{
   Widget build(BuildContext context) {
     final double DW = MediaQuery.of(context).size.width;
     final double DH = MediaQuery.of(context).size.height;
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
 

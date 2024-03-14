@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../app_config.dart';
 import 'package:selfstudy/shorts/video_player.dart';
@@ -26,6 +27,9 @@ class UploadImage extends StatefulWidget {
   State<UploadImage> createState() => CreateSList();
 }
 class CreateSList extends State<UploadImage>{
+  late SharedPreferences prefs;
+  int UserID = 0;
+
   List<MainGroupDataModel> MainGroups = [];
   List<SubGroupDataModel> SubGroups = [];
   List<ServerResponseModel> ServerRespons = [];
@@ -64,6 +68,8 @@ class CreateSList extends State<UploadImage>{
     SubTitleController.addListener(SubGrpTitleChanged);
   }
   Future<void> fetchGroups() async {
+    prefs = await SharedPreferences.getInstance();
+    UserID = prefs.getInt('Userid')!;
     var body = {
       "ACTION": "9",
       "ROWNO": 0,
@@ -157,8 +163,7 @@ class CreateSList extends State<UploadImage>{
     //----
   }
   //----------------------
-  Future<void> SaveDataOnServer(File URL, String GrpNme,
-      String SubGrpNme) async {
+  Future<void> SaveDataOnServer(File URL, String GrpNme, String SubGrpNme) async {
     setState(() {
       ServerMessage = "Uploading in progress.....";
     });
@@ -185,6 +190,7 @@ class CreateSList extends State<UploadImage>{
         var body = {
           "ACTION": "13",
           "ROWNO": 0,
+          "USERID": UserID,
           "GROUPID": SelectedGrpName.GroupID,
           "GROUPNAME": GrpNme,
           "SUBGROUPID": SelectedSubGrpName.SubGrpID,

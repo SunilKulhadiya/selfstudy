@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:selfstudy/app_config.dart';
 import 'package:selfstudy/drawer_menus/upload_files.dart';
 import 'package:selfstudy/drawer_menus/terms_conditions.dart';
+import 'package:selfstudy/drawer_menus/profile.dart';
 
 class DrawerMenu extends StatefulWidget {
 
@@ -75,8 +76,9 @@ class CreateSList extends State<DrawerMenu>{
                   title: Text('Profile'),
                   onTap: (){
                     /// Close Navigation drawer before
-                    // Navigator.pop(context);
-                    // Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()),);
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                        UserProfile()),);
                   },
                 ),
                 ListTile(
@@ -86,14 +88,15 @@ class CreateSList extends State<DrawerMenu>{
                     /// Close Navigation drawer before
                     Navigator.pop(context);
                     Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                        UploadFiles()),);
+                        UploadFiles(Route: 0, context: context)
+                    ),);
                   },
                 ),
                 ListTile(
                   leading: Icon(Icons.window),
-                  title: Text("Your Upload"),
+                  title: Text("Yours Upload"),
                   onTap: (){
-                    /// Close Navigation drawer before
+                    // Close Navigation drawer before
                     // Navigator.pop(context);
                     // Navigator.push(context, MaterialPageRoute(builder: (context) =>
                     //     UploadFiles()),);

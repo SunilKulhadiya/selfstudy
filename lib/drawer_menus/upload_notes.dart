@@ -1,17 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../app_config.dart';
-import 'package:selfstudy/shorts/video_player.dart';
 import 'package:selfstudy/module/main_group_model.dart';
 import 'package:selfstudy/module/subgrp_model.dart';
 import 'package:selfstudy/module/server_response_model.dart';
@@ -26,6 +23,8 @@ class UploadNotes extends StatefulWidget {
   State<UploadNotes> createState() => CreateSList();
 }
 class CreateSList extends State<UploadNotes> with TickerProviderStateMixin{
+  late SharedPreferences prefs;
+  int UserID = 0;
   late AnimationController Progresscontroller;
   List<MainGroupDataModel> MainGroups = [];
   List<SubGroupDataModel> SubGroups = [];
@@ -74,6 +73,8 @@ class CreateSList extends State<UploadNotes> with TickerProviderStateMixin{
   }
 
   Future<void> fetchGroups() async {
+    prefs = await SharedPreferences.getInstance();
+    UserID = prefs.getInt('Userid')!;
     var body = {
       "ACTION": "9",
       "ROWNO": 0,
@@ -195,6 +196,7 @@ class CreateSList extends State<UploadNotes> with TickerProviderStateMixin{
         var body = {
           "ACTION": "14",
           "ROWNO": 0,
+          "USERID": UserID,
           "GROUPID": SelectedGrpName.GroupID,
           "GROUPNAME": GrpNme,
           "SUBGROUPID": SelectedSubGrpName.SubGrpID,

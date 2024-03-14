@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../app_config.dart';
+import 'package:selfstudy/app_config.dart';
 import 'package:selfstudy/shorts/video_player.dart';
 import 'package:selfstudy/module/main_group_model.dart';
 import 'package:selfstudy/module/subgrp_model.dart';
@@ -15,14 +15,14 @@ import 'package:selfstudy/module/server_response_model.dart';
 
 
 
-class UploadShorts extends StatefulWidget {
+class UserUploadShorts extends StatefulWidget {
 
-  const UploadShorts({super.key});
+  const UserUploadShorts({super.key});
 
   @override
-  State<UploadShorts> createState() => CreateSList();
+  State<UserUploadShorts> createState() => CreateSList();
 }
-class CreateSList extends State<UploadShorts> with TickerProviderStateMixin{
+class CreateSList extends State<UserUploadShorts> with TickerProviderStateMixin{
   late SharedPreferences prefs;
   int UserID = 0;
   late AnimationController Progresscontroller;
@@ -59,7 +59,7 @@ class CreateSList extends State<UploadShorts> with TickerProviderStateMixin{
     super.initState();
     GrpDWBTN = 0;
     SubGrpDWBTN = 0;
-    fetchGroups();
+    //fetchGroups();
     GrpNameController.addListener(GrpNameChanged);
     SubTitleController.addListener(SubGrpTitleChanged);
     //SubmitProgressIndicator(0);
@@ -285,180 +285,26 @@ class CreateSList extends State<UploadShorts> with TickerProviderStateMixin{
     final double DH = MediaQuery.of(context).size.height;
 
     return Scaffold(
-        body: Container(
+      body: Container(
         color: Colors.grey,
         child: SafeArea(
-        child: CustomScrollView(
-        slivers: <Widget>[
-          SliverToBoxAdapter(
-            child: Container(
-              alignment: Alignment.center,
-              margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-              child: Text("Short",
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 22,
-              color: Color.fromRGBO(189, 183, 8, 8)),),
-              ),
-          ),
-          SliverToBoxAdapter(
-            child: Container(
-              alignment: Alignment.center,
-              margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-              child: GestureDetector(
-              onTap: (){
-              _showPicker(context: context);
-              },
-              child: Column(
-              children: [
-              Container(
-                child: galleryFile == null ?
-                Icon(Icons.video_camera_back_outlined, size: 200,) :
-                Container(
-                  width: DW * 0.4,
-                  height: DW * 0.4,
-                  alignment: Alignment.center,
-                  child: galleryFile == null ? Icon(Icons.video_camera_back_outlined, size: 200,) :
-                    MyVideoPlayer(VideoUrl: galleryFile, context: context),
+          child: CustomScrollView(
+              slivers: <Widget>[
+                SliverToBoxAdapter(
+                  child: Container(
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: Text("Short",
+                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: 22,
+                          color: Color.fromRGBO(189, 183, 8, 8)),),
+                  ),
                 ),
-              ),
-              Container(
-                alignment: Alignment.topCenter,
-                child: Text("Touch me", style:
-                TextStyle(fontSize: galleryFile == null ? 15 : 25,
-                fontWeight: galleryFile == null ? FontWeight.normal : FontWeight.bold),),
-              ),
-            ]
-              ),
-              ),
-            ),
+
+
+              ]
           ),
-
-          SliverToBoxAdapter(
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    alignment: Alignment.topLeft,
-                    width: DW * 0.97,
-                    margin: EdgeInsets.fromLTRB(10, 25, 0, 5),
-                    child: GrpDropdownButton(context),
-                  ),
-                ]
-            ),
-          ),
-
-          SliverToBoxAdapter(
-            child: SelectedGrpName.GroupName != 'Other' ? null : Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    alignment: Alignment.topLeft,
-                    width: double.infinity,
-                    margin: EdgeInsets.fromLTRB(10, 5, 0, 5),
-                    child: TextFormField(
-                      controller: GrpNameController,
-                      // onChanged: (value) {
-                      //   SubTitle = SubTitleController.text;
-                      // },
-                      decoration: InputDecoration(
-                        hintText: 'Group',
-                      ),
-                    ),
-                  ),
-                ]
-            ),
-          ),
-
-          SliverToBoxAdapter(
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    alignment: Alignment.topLeft,
-                    width: DW * 0.97,
-                    margin: EdgeInsets.fromLTRB(10, 5, 0, 5),
-                    child: SubGrpDropdownButton(context),
-                  ),
-                ]
-            ),
-          ),
-
-          SliverToBoxAdapter(
-            child: SelectedSubGrpName.SubGrpName != 'Other' ? null : Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    alignment: Alignment.topLeft,
-                    width: double.infinity,
-                    margin: EdgeInsets.fromLTRB(10, 10, 10, 5),
-                    child: TextFormField(
-                      controller: SubTitleController,
-                      // onChanged: (value) {
-                      //   SubTitle = SubTitleController.text;
-                      // },
-                      decoration: InputDecoration(
-                        hintText: 'Title',
-                      ),
-                    ),
-                  ),
-                ]
-            ),
-          ),
-
-          SliverToBoxAdapter(
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                      alignment: Alignment.center,
-                      height: DH * 0.05,
-                      margin: EdgeInsets.fromLTRB(30, 100, 30, 30),
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: GestureDetector(
-                        onTap: (){
-                          print("-------------------------------------Submit");
-                          if(SelectedGrpName.GroupName == 'Select Group' ||
-                              SelectedSubGrpName.SubGrpName == 'Select Title' ||
-                              galleryFile == null){
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('All fields are required.....')));
-                          }else{
-                            if(SelectedGrpName.GroupName != 'Other'){
-                              TEXTGrpName = SelectedGrpName.GroupName;
-                            }
-                            if(SelectedSubGrpName.SubGrpName != 'Other'){
-                              TEXTSubGrpTitle = SelectedSubGrpName.SubGrpName;
-                            }
-                            if(galleryFile == null){
-                              ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
-                                  const SnackBar(content: Text('Please select file or sync in progress...')));
-                            }else {
-                              SaveDataOnServer(
-                                  galleryFile!, TEXTGrpName, TEXTSubGrpTitle);
-                            }
-                          }
-                        },
-                        child: Text(ServerMessage,
-                            style: TextStyle(fontSize: 22,
-                                color: Colors.white)),
-                      )
-                  ),
-                ]
-            ),
-          ),
-
-
-        ]
+        ),
       ),
-    ),
-    ),
     );
   }
 

@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../app_config.dart';
 import 'package:selfstudy/shorts/video_player.dart';
@@ -24,6 +23,8 @@ class UploadVideo extends StatefulWidget {
   State<UploadVideo> createState() => CreateSList();
 }
 class CreateSList extends State<UploadVideo>{
+  late SharedPreferences prefs;
+  int UserID = 0;
   List<MainGroupDataModel> MainGroups = [];
   List<SubGroupDataModel> SubGroups = [];
   List<ServerResponseModel> ServerRespons = [];
@@ -62,6 +63,8 @@ class CreateSList extends State<UploadVideo>{
     SubTitleController.addListener(SubGrpTitleChanged);
   }
   Future<void> fetchGroups() async {
+    prefs = await SharedPreferences.getInstance();
+    UserID = prefs.getInt('Userid')!;
     var body = {
       "ACTION": "9",
       "ROWNO": 0,
@@ -180,6 +183,7 @@ class CreateSList extends State<UploadVideo>{
         var body = {
           "ACTION": "12",
           "ROWNO": 0,
+          "USERID": UserID,
           "GROUPID": SelectedGrpName.GroupID,
           "GROUPNAME": GrpNme,
           "SUBGROUPID": SelectedSubGrpName.SubGrpID,
