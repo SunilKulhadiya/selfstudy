@@ -96,10 +96,11 @@ class CreateSList extends State<DrawerMenu>{
                   leading: Icon(Icons.window),
                   title: Text("Yours Upload"),
                   onTap: (){
-                    // Close Navigation drawer before
-                    // Navigator.pop(context);
-                    // Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                    //     UploadFiles()),);
+                    /// Close Navigation drawer before
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                        UploadFiles(Route: 1, context: context)
+                    ),);
                   },
                 ),
                 const Divider(color: Colors.black45,),

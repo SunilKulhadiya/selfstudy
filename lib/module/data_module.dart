@@ -11,6 +11,7 @@ class VideoDataModel {
   final String GroupID;
   final String SubGroupID;
   final String Approve;
+  final int UserID;
 
   VideoDataModel({
     required this.id,
@@ -23,6 +24,7 @@ class VideoDataModel {
     required this.GroupID,
     required this.SubGroupID,
     required this.Approve,
+    required this.UserID,
   });
 
   factory VideoDataModel.fromJson(Map<String, dynamic> json) {
@@ -37,6 +39,7 @@ class VideoDataModel {
       GroupID: json['group_id'],
       SubGroupID: json['sub_group_id'],
       Approve: json['approved'],
+      UserID: int.parse(json['user_id']),
     );
   }
 }

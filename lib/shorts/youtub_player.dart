@@ -10,11 +10,13 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 class YouTubePlayer extends StatefulWidget {
   final String VideoUrl;
   final int AutoPlay;
+  final int PageNo;
   final BuildContext context;
 
   const YouTubePlayer({super.key,
     required this.VideoUrl,
     required this.AutoPlay,
+    required this.PageNo,
     required this.context});
 
   @override
@@ -115,7 +117,7 @@ class _MySpecificPageState extends State<YouTubePlayer> {
       liveUIColor: Colors.amber,
       showVideoProgressIndicator: true,
       progressIndicatorColor: Colors.blueAccent,
-      aspectRatio: 4 / 9,
+      aspectRatio: widget.PageNo == 3 ? 7/9 : 4/9,
       onReady: () {
         _isPlayerReady = true;
         // _controller.play();

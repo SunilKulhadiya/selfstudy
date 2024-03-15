@@ -11,6 +11,7 @@ class CarouselDataModel {
   final String Approve;
   final String Page;
   final int ImgDeco;
+  final int UserID;
 
   CarouselDataModel({
     required this.id,
@@ -23,6 +24,7 @@ class CarouselDataModel {
     required this.Approve,
     required this.Page,
     required this.ImgDeco,
+    required this.UserID,
   });
 
   factory CarouselDataModel.fromJson(Map<String, dynamic> json) {
@@ -37,6 +39,7 @@ class CarouselDataModel {
       Approve: json['approved'],
       Page: json['page'],
       ImgDeco: int.parse(json['img_decoration']),
+      UserID: int.parse(json['user_id']),
     );
   }
 }

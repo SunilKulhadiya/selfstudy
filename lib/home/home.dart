@@ -61,17 +61,17 @@ class CreateHomePage extends State<Home>{
       CarouselDataModel CDM = new CarouselDataModel(id: 0, title: "",
           ImgUrl: AppConfig.CAROUSE_URL+'India_EtoW_NtoS_Length.jpg',
           GroupName: '', GroupID: "0", Approve: "1", Page: "0", ImgDeco: 0,
-          Subtitle: "", SubGroupID: "0");
+          Subtitle: "", SubGroupID: "0", UserID: 0);
       CaroUselData.add(CDM);
       CDM = new CarouselDataModel(id: 0, title: "",
           ImgUrl: AppConfig.CAROUSE_URL+'ArabSagarMeMilneBaliNadiyan.jpg',
           GroupName: '', GroupID: "0", Approve: "1", Page: "0", ImgDeco: 0,
-          Subtitle: "", SubGroupID: "0");
+          Subtitle: "", SubGroupID: "0", UserID: 0);
       CaroUselData.add(CDM);
       CDM = new CarouselDataModel(id: 0, title: "",
           ImgUrl: AppConfig.CAROUSE_URL+'ArabSagarMeMilneBaliNadiyan.jpg',
           GroupName: '', GroupID: "0", Approve: "1", Page: "0", ImgDeco: 0,
-          Subtitle: "", SubGroupID: "0");
+          Subtitle: "", SubGroupID: "0", UserID: 0);
       CaroUselData.add(CDM);
     }
     //-------------------------------
@@ -296,7 +296,7 @@ class CreateHomePage extends State<Home>{
                             alignment: Alignment.center,
                             child: YouTubePlayer(
                               VideoUrl: ShortsData[index].Url,
-                              AutoPlay: 0,
+                              AutoPlay: 0, PageNo: 0,
                               context: context,
                             ),
                           ),

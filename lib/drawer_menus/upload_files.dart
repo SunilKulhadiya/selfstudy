@@ -13,6 +13,9 @@ import 'package:selfstudy/drawer_menus/upload_shorts.dart';
 import 'package:selfstudy/drawer_menus/upload_video.dart';
 import 'package:selfstudy/drawer_menus/upload_web_url.dart';
 import 'package:selfstudy/drawer_menus/user_uploads/user_upload_shorts.dart';
+import 'package:selfstudy/drawer_menus/user_uploads/user_upload_images.dart';
+import 'package:selfstudy/drawer_menus/user_uploads/user_upload_pdf.dart';
+import 'package:selfstudy/drawer_menus/user_uploads/user_upload_weburl.dart';
 
 class UploadFiles extends StatefulWidget {
   final int Route;
@@ -56,10 +59,10 @@ class CreateSList extends State<UploadFiles>{
               icon: new Icon(Icons.arrow_back_ios, color: Colors.grey),
               onPressed: () => Navigator.of(context).pop(),
             ),
-            title: const Text('Upload'),
+            title: widget.Route == 0 ? const Text('Upload') : const Text('Your Upload'),
             backgroundColor: Color.fromRGBO(117, 254, 250, 51),
           ),
-          body: const TabBarView(
+          body: widget.Route == 0 ? const TabBarView(
             children: [
               Center(
                 child: UploadShorts(),
@@ -77,7 +80,25 @@ class CreateSList extends State<UploadFiles>{
                 child: UploadWebUrl(),
               ),
             ],
-          ),
+          ) : const TabBarView(
+            children: [
+              Center(
+                child: UserUploadShorts(DataType: "Shorts"),
+              ),
+              Center(
+                child: UserUploadShorts(DataType: "Tutorial"),
+              ),
+              Center(
+                child: UserUploadImages(DataType: "Image"),
+              ),
+              Center(
+                child: UserUploadPdf(DataType: "Notes"),
+              ),
+              Center(
+                child: UserUploadWebsite(DataType: "Website"),
+              ),
+            ],
+          )
         ),
       ),
     );

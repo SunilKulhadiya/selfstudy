@@ -74,8 +74,7 @@ class CreateSList extends State<Syllabus>{
         CaroUselData2 = jsonData.map((data) => CarouselDataModel.fromJson(data)).toList();
         print(">>>>>>>>>>>>>>>>>Carousel Data------------------------CaroUselData----------------- : ${CaroUselData2[1].ImgUrl}");
       });
-    }
-    else {
+    }else {
       CarouselDataModel CDM = new CarouselDataModel(id: 0,
           title: "",
           Subtitle: "",
@@ -84,7 +83,7 @@ class CreateSList extends State<Syllabus>{
           GroupID: "0",
           SubGroupID: "0",
           Approve: "1",
-          Page: "0", ImgDeco: 0);
+          Page: "0", ImgDeco: 0, UserID: 0);
       CaroUselData2.add(CDM);
       CDM = new CarouselDataModel(id: 0,
           title: "",
@@ -94,7 +93,7 @@ class CreateSList extends State<Syllabus>{
           GroupID: "0",
           SubGroupID: "0",
           Approve: "1",
-          Page: "0", ImgDeco: 0);
+          Page: "0", ImgDeco: 0, UserID: 0);
       CaroUselData2.add(CDM);
       CDM = new CarouselDataModel(id: 0,
           title: "",
@@ -104,7 +103,7 @@ class CreateSList extends State<Syllabus>{
           GroupID: "0",
           SubGroupID: "0",
           Approve: "1",
-          Page: "0", ImgDeco: 0);
+          Page: "0", ImgDeco: 0, UserID: 0);
       CaroUselData2.add(CDM);
     }
     //-------------------------------Fetch Main Group

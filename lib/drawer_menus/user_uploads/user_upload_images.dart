@@ -18,19 +18,20 @@ import '../../shorts/youtub_player.dart';
 
 
 
-class UserUploadShorts extends StatefulWidget {
+class UserUploadImages extends StatefulWidget {
   final String DataType;
 
-  const UserUploadShorts({
+  const UserUploadImages({
     super.key,
     required this.DataType,
   });
 
   @override
-  State<UserUploadShorts> createState() => CreateSList();
+  State<UserUploadImages> createState() => CreateSList();
 }
-class CreateSList extends State<UserUploadShorts>{
+class CreateSList extends State<UserUploadImages>{
   late SharedPreferences prefs;
+  List<VideoDataModel> UserdData = [];
   List<VideoDataModel> UserdDataApprovPending = [];
   List<VideoDataModel> UserdDataApproved = [];
 
@@ -46,9 +47,8 @@ class CreateSList extends State<UserUploadShorts>{
     UserID = prefs.getInt('Userid')!;
     print("-------------------- >>>>>>>>>>>>>>>>>>>>>> UserID : ${UserID} , ${widget.DataType}");
     var body = {
-      "ACTION": "28",
+      "ACTION": "30",
       "ROWNO": 0,
-      "TYPE": widget.DataType,
       "GROUPID": UserID,
     };
     var jsonBody = json.encode(body);
@@ -68,34 +68,9 @@ class CreateSList extends State<UserUploadShorts>{
 
       print(">>>>>>>>>>>>>>>>>jsonData------------------------jsonData----------------- : ${jsonData}");
       setState(() {
-        UserdDataApprovPending = jsonData.map((data) => VideoDataModel.fromJson(data)).toList();
-        print(">>>>>>>>>>>>>>>>>UserUploadData------------------------UserUploadData----------------- : ${UserdDataApprovPending}");
-      });
-    }
-    body = {
-      "ACTION": "29",
-      "ROWNO": 0,
-      "TYPE": widget.DataType,
-      "GROUPID": UserID,
-    };
-    jsonBody = json.encode(body);
-
-    // you can replace your api link with this link
-    response = await
-    http.post(Uri.parse(AppConfig.BASE_API_URL + 'Fetch_SelfStudy.php'),
-        body: jsonBody,
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        }
-    );
-    if (response.statusCode == 200) {
-      List<dynamic> jsonData = json.decode(response.body);
-      print("--------------------Save server response : ${response.body}");
-
-      print(">>>>>>>>>>>>>>>>>jsonData------------------------jsonData----------------- : ${jsonData}");
-      setState(() {
-        UserdDataApproved = jsonData.map((data) => VideoDataModel.fromJson(data)).toList();
+        UserdData = jsonData.map((data) => VideoDataModel.fromJson(data)).toList();
+        UserdDataApprovPending = UserdData.where((data) => data.Approve.contains("0")).toList();
+        UserdDataApproved = UserdData.where((data) => data.Approve.contains("1")).toList();
         print(">>>>>>>>>>>>>>>>>UserUploadData------------------------UserUploadData----------------- : ${UserdDataApproved}");
       });
     }
@@ -113,7 +88,9 @@ class CreateSList extends State<UserUploadShorts>{
     final double DH = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: Container(
+      body: RefreshIndicator(
+      onRefresh: fetchUploadedShorts,
+      child : Container(
         color: Colors.grey,
         child: SafeArea(
           child: CustomScrollView(
@@ -157,14 +134,12 @@ class CreateSList extends State<UserUploadShorts>{
                             child: Column(
                               children: [
                                 Container(
+                                  width: DW * 0.3,
+                                  height: DH * 0.15,
                                   margin: EdgeInsets.all(5),
                                   alignment: Alignment.center,
-                                  child: YouTubePlayer(
-                                    VideoUrl: UserdDataApproved[index].Url,
-                                    AutoPlay: 0, PageNo: 3,
-                                    context: context,
-                                  ),
-
+                                  child: Image.network(UserdDataApproved[index].ImgUrl, fit: BoxFit.fill,
+                                    scale: 0.3,),
                                 ),
                                 Container(
                                   padding: EdgeInsets.all(3),
@@ -221,9 +196,7 @@ class CreateSList extends State<UserUploadShorts>{
                                 Container(
                                   margin: EdgeInsets.all(5),
                                   alignment: Alignment.center,
-                                  child: VideoPlayerWithUrl(
-                                      VideoUrl: UserdDataApprovPending[index].Url,
-                                      context: context),
+                                  child: Image.network(UserdDataApprovPending[index].ImgUrl, fit: BoxFit.fill,),
 
                                 ),
                                 Container(
@@ -255,6 +228,7 @@ class CreateSList extends State<UserUploadShorts>{
           ),
         ),
       ),
+    ),
     );
   }
 

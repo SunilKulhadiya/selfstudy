@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 //import 'package:splashscreen/splashscreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:selfstudy/shorts/shorts_type.dart';
 import 'package:selfstudy/drawer_menus/drawer_menu.dart';
@@ -64,6 +65,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late SharedPreferences prefs;
   int _counter = 0;
   int _selectedIndex = 0;
   List _pages = [
@@ -80,6 +82,15 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
   final ScrollController _homeController = ScrollController();
 
+  @override
+  void initState() {
+    super.initState();
+    FetchUserID();
+  }
+  Future<void> FetchUserID() async {
+    prefs = await SharedPreferences.getInstance();
+    prefs.setInt('Userid', 9);
+  }
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has

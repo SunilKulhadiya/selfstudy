@@ -251,6 +251,7 @@ class CreateSList extends State<ShortsList>{
                       child: YouTubePlayer(
                         VideoUrl: VDModel[index].Url,
                         AutoPlay: index == 0 ? 1 : 0,
+                        PageNo: 1,
                         context: context,
                       )
                   ),
