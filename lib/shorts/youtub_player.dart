@@ -91,6 +91,7 @@ class _MySpecificPageState extends State<YouTubePlayer> {
         _playerState = _controller.value.playerState;
         _videoMetaData = _controller.metadata;
         print("-----------************************************----------_playerState : ${_playerState}");
+        print("-----------************************************----------_videoMetaData : ${_videoMetaData}");
       });
     }
   }

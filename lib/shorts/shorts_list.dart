@@ -332,6 +332,7 @@ class CreateSList extends State<ShortsList>{
             return DropdownMenuItem<SubTitleDataModel>(
               value: Vvalue,
               child: Container(
+                width: DW * 0.4,
                 alignment: Alignment.centerLeft,
                 child: new Text(
                   Vvalue.SubTitle, textAlign: TextAlign.start,
@@ -399,6 +400,7 @@ class CreateSList extends State<ShortsList>{
             return DropdownMenuItem<SubTitleDataModel>(
               value: Vvalue,
               child: Container(
+                width: DW * 0.4,
                 alignment: Alignment.centerLeft,
                 child: new Text(
                   Vvalue.SubTitle, textAlign: TextAlign.start,

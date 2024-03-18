@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 import 'package:video_player/video_player.dart';
 
@@ -19,8 +21,10 @@ class VideoPlayerWithUrl extends StatefulWidget {
 }
 
 class _MySpecificPageState extends State<VideoPlayerWithUrl> {
+  late SharedPreferences prefs;
   VideoPlayerController? controller;
   late VoidCallback listener;
+  int UserID = 0;
 
   @override
   void initState() {
@@ -29,6 +33,9 @@ class _MySpecificPageState extends State<VideoPlayerWithUrl> {
   }
 
   Future<void> fetchProducts() async {
+    prefs = await SharedPreferences.getInstance();
+    UserID = prefs.getInt('Userid')!;
+
     //controller = VideoPlayerController.file(widget.VideoUrl!)
     print("=============================VideoPlayerWithUrl : ${widget.VideoUrl}");
     controller = VideoPlayerController.network(widget.VideoUrl!)
