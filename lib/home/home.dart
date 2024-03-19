@@ -319,7 +319,7 @@ class CreateHomePage extends State<Home>{
                               ),
                               margin: EdgeInsets.fromLTRB(0, 5, 5, 0),
                               alignment: Alignment.center,
-                              width: 100,
+                              width: W > 400 ? 100 : 115,
                             child: GestureDetector(
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
@@ -333,7 +333,7 @@ class CreateHomePage extends State<Home>{
                                 padding: EdgeInsets.all(3),
                                 child: Text('Full Screen', softWrap: true,
                                   style: TextStyle(fontWeight: FontWeight.bold,
-                                    fontSize: 16,),),                          )
+                                    fontSize: W > 400 ? 16 : 14,),),                          )
                           ),
                           ),
                         )

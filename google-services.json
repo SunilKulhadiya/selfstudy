@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "132745623288",
+    "project_id": "selfstudy-3b5b8",
+    "storage_bucket": "selfstudy-3b5b8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:132745623288:android:fd1ca073726501dd46ad0d",
+        "android_client_info": {
+          "package_name": "com.example.selfstudy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdBIN-kFf9k-evkCpTrubGs_cHgcPJ-UE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:132745623288:android:9680c4e4c38cd11f46ad0d",
+        "android_client_info": {
+          "package_name": "com.skandsolution.selfstudy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdBIN-kFf9k-evkCpTrubGs_cHgcPJ-UE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

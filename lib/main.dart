@@ -1,7 +1,10 @@
+//import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 //import 'package:splashscreen/splashscreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:selfstudy/shorts/shorts_type.dart';
 import 'package:selfstudy/drawer_menus/drawer_menu.dart';
@@ -9,7 +12,12 @@ import 'package:selfstudy/home/home.dart';
 import 'package:selfstudy/read/docu_list.dart';
 import 'package:selfstudy/syllabus/syllabus.dart';
 
-void main() {
+import 'package:selfstudy/firebase_api/firebase_api.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await FirebaseApi().initNotifications();
   runApp(const MyApp());
 }
 
@@ -66,6 +74,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late SharedPreferences prefs;
+  String DToken = "";
   int _counter = 0;
   int _selectedIndex = 0;
   List _pages = [
@@ -85,13 +94,45 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    RequestPermission();
+    GetDeviceToken();
     FetchUserID();
   }
   Future<void> FetchUserID() async {
     prefs = await SharedPreferences.getInstance();
-    //prefs.setInt('Userid', 9);
   }
-  void _incrementCounter() {
+  Future<void> RequestPermission() async {
+    print("------------main=============AuthorizationStatus : ********************************************");
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    NotificationSettings notificationSettings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+    print("------------main=============AuthorizationStatus : ${notificationSettings.authorizationStatus}");
+    if(notificationSettings.authorizationStatus == AuthorizationStatus.authorized){
+      print("------------main=============AuthorizationStatus : ${notificationSettings.authorizationStatus}");
+    }else if(notificationSettings.authorizationStatus == AuthorizationStatus.provisional){
+      print("------------main=============AuthorizationStatus : ${notificationSettings.authorizationStatus}");
+    }else{
+      print("------------main=============AuthorizationStatus : ${notificationSettings.authorizationStatus}");
+      print("------------=============////////////////////// User declined or has not accepted permission");
+    }
+  }
+
+  Future<void> GetDeviceToken() async {
+    await FirebaseMessaging.instance.getToken().then((token){
+      setState(() {
+        DToken = token!;
+      });
+    });
+  }
+
+    void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
