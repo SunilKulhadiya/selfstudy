@@ -1,4 +1,6 @@
 //import 'dart:html';
+import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 //import 'package:splashscreen/splashscreen.dart';
@@ -14,10 +16,45 @@ import 'package:selfstudy/syllabus/syllabus.dart';
 
 import 'package:selfstudy/firebase_api/firebase_api.dart';
 
+Future<void> BackGHandle(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print("------------------------------------Back ground handler notification------------------------------");
+  print("------------------------------------Title : ${message.notification!.title}");
+  print("------------------------------------Body : ${message.notification!.body}");
+  print("------------------------------------Payload : ${message.data}");
+}
+void ForgroundfirebaseMessagingListener() {
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print("------------------------------------forground handler notification------------------------------");
+    print('Message data: ${jsonEncode(message.toMap())}');
+    print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Message: ${message.notification!.title}');
+    print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Message: ${message.notification!.body}');
+
+    if (message.notification != null) {
+      // that means new message
+
+      try {
+      } catch (e) {
+      }
+    }
+  });
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await FirebaseApi().initNotifications();
+  try {
+    FirebaseMessaging.onBackgroundMessage(BackGHandle);
+    ForgroundfirebaseMessagingListener();
+    await FirebaseFirestore.instance.collection("SelfStudy").doc("User2").set({
+      "Email": "skand@gmail.com",
+      "Name": "Sunil KK",
+      "Token": "eiYWbzriRSagaZI49L9qST:APA91bGqc9mcgQYlWGWh2OLRwj8NQ7jerGURhblB6ObSHZYWVRLOeKc3tkpM1XR13VxzVnWBsEoPcLXPtxIznWmeyqxUosbuJmR3f3uhuh_qTk25twZ7OF_09FjBoB0w7K-Lm5z-NLat",});
+  }catch(e){
+    print("*********************-----------Error : {e}");
+  }
+
   runApp(const MyApp());
 }
 
@@ -95,7 +132,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     RequestPermission();
-    GetDeviceToken();
     FetchUserID();
   }
   Future<void> FetchUserID() async {
@@ -122,14 +158,6 @@ class _MyHomePageState extends State<MyHomePage> {
       print("------------main=============AuthorizationStatus : ${notificationSettings.authorizationStatus}");
       print("------------=============////////////////////// User declined or has not accepted permission");
     }
-  }
-
-  Future<void> GetDeviceToken() async {
-    await FirebaseMessaging.instance.getToken().then((token){
-      setState(() {
-        DToken = token!;
-      });
-    });
   }
 
     void _incrementCounter() {
