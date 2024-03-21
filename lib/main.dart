@@ -7,14 +7,17 @@ import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_core/firebase_core.dart';
+//import 'package:http/http.dart' as http;
 
 import 'package:selfstudy/shorts/shorts_type.dart';
 import 'package:selfstudy/drawer_menus/drawer_menu.dart';
 import 'package:selfstudy/home/home.dart';
 import 'package:selfstudy/read/docu_list.dart';
 import 'package:selfstudy/syllabus/syllabus.dart';
-
 import 'package:selfstudy/firebase_api/firebase_api.dart';
+import 'package:selfstudy/api_repository/api_repository.dart';
+
+String Notif = "";
 
 Future<void> BackGHandle(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -22,6 +25,8 @@ Future<void> BackGHandle(RemoteMessage message) async {
   print("------------------------------------Title : ${message.notification!.title}");
   print("------------------------------------Body : ${message.notification!.body}");
   print("------------------------------------Payload : ${message.data}");
+
+  ApiRepository().SaveNotification(message.data as String);
 }
 void ForgroundfirebaseMessagingListener() {
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -30,13 +35,8 @@ void ForgroundfirebaseMessagingListener() {
     print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Message: ${message.notification!.title}');
     print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Message: ${message.notification!.body}');
 
-    if (message.notification != null) {
-      // that means new message
-
-      try {
-      } catch (e) {
-      }
-    }
+    //Notif = jsonEncode(message.toMap());
+    ApiRepository().SaveNotification(jsonEncode(message.toMap()));
   });
 }
 
@@ -47,13 +47,14 @@ Future<void> main() async {
   try {
     FirebaseMessaging.onBackgroundMessage(BackGHandle);
     ForgroundfirebaseMessagingListener();
-    await FirebaseFirestore.instance.collection("SelfStudy").doc("User2").set({
-      "Email": "skand@gmail.com",
-      "Name": "Sunil KK",
-      "Token": "eiYWbzriRSagaZI49L9qST:APA91bGqc9mcgQYlWGWh2OLRwj8NQ7jerGURhblB6ObSHZYWVRLOeKc3tkpM1XR13VxzVnWBsEoPcLXPtxIznWmeyqxUosbuJmR3f3uhuh_qTk25twZ7OF_09FjBoB0w7K-Lm5z-NLat",});
   }catch(e){
     print("*********************-----------Error : {e}");
   }
+  Future.delayed(Duration(seconds: 5), () {
+    ApiRepository().UserTokenUpdate();
+  });
+
+  //SendNotification();
 
   runApp(const MyApp());
 }
@@ -132,32 +133,30 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     RequestPermission();
-    FetchUserID();
-  }
-  Future<void> FetchUserID() async {
-    prefs = await SharedPreferences.getInstance();
   }
   Future<void> RequestPermission() async {
-    print("------------main=============AuthorizationStatus : ********************************************");
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-    NotificationSettings notificationSettings = await messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-    print("------------main=============AuthorizationStatus : ${notificationSettings.authorizationStatus}");
-    if(notificationSettings.authorizationStatus == AuthorizationStatus.authorized){
-      print("------------main=============AuthorizationStatus : ${notificationSettings.authorizationStatus}");
-    }else if(notificationSettings.authorizationStatus == AuthorizationStatus.provisional){
-      print("------------main=============AuthorizationStatus : ${notificationSettings.authorizationStatus}");
-    }else{
-      print("------------main=============AuthorizationStatus : ${notificationSettings.authorizationStatus}");
-      print("------------=============////////////////////// User declined or has not accepted permission");
-    }
+    prefs = await SharedPreferences.getInstance();
+    //prefs.setString("Notif", Notif);
+    // print("------------main=============AuthorizationStatus : ********************************************");
+    // FirebaseMessaging messaging = FirebaseMessaging.instance;
+    // NotificationSettings notificationSettings = await messaging.requestPermission(
+    //   alert: true,
+    //   announcement: false,
+    //   badge: true,
+    //   carPlay: false,
+    //   criticalAlert: false,
+    //   provisional: false,
+    //   sound: true,
+    // );
+    // print("------------main=============AuthorizationStatus : ${notificationSettings.authorizationStatus}");
+    // if(notificationSettings.authorizationStatus == AuthorizationStatus.authorized){
+    //   print("------------main=============AuthorizationStatus : ${notificationSettings.authorizationStatus}");
+    // }else if(notificationSettings.authorizationStatus == AuthorizationStatus.provisional){
+    //   print("------------main=============AuthorizationStatus : ${notificationSettings.authorizationStatus}");
+    // }else{
+    //   print("------------main=============AuthorizationStatus : ${notificationSettings.authorizationStatus}");
+    //   print("------------=============////////////////////// User declined or has not accepted permission");
+    // }
   }
 
     void _incrementCounter() {

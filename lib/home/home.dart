@@ -1,10 +1,12 @@
 import 'dart:convert';
-import 'dart:io';
+// import 'dart:html';
+// import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:webview_flutter/webview_flutter.dart';
 import '../module/data_module.dart';
 import 'package:selfstudy/shorts/youtub_player.dart';
 
@@ -13,7 +15,9 @@ import '../read/pdf_viewer.dart';
 import '../shorts/shorts_list.dart';
 import 'package:selfstudy/home/google_search_view.dart';
 import 'package:selfstudy/module/carousel_model.dart';
+import 'package:selfstudy/module/ques_ans_model.dart';
 import 'package:selfstudy/image_viewer/image_view_zoom.dart';
+import 'package:selfstudy/home/question_answer.dart';
 
 
 class Home extends StatefulWidget {
@@ -24,7 +28,10 @@ class Home extends StatefulWidget {
 }
 
 class CreateHomePage extends State<Home>{
+  late SharedPreferences prefs;
+  String Notiff = "";
   List<CarouselDataModel> CaroUselData = [];
+  List<QAnsModel> QuestionAnswer = [];
   List<VideoDataModel> ShortsData = [];
   List<VideoDataModel> DocData = [];
   final MySearchValue = TextEditingController();
@@ -94,8 +101,75 @@ class CreateHomePage extends State<Home>{
       print("--------------------Home : ${jsonData}");
       setState(() {
         ShortsData = jsonData.map((data) => VideoDataModel.fromJson(data)).toList();
+
       });
       print("-------------------Home-VDModel : ${ShortsData}");
+    } else {
+      // Handle error if needed
+    }
+    //-------------------------------Question &  Answer
+    body = {
+      "ACTION": "35",
+      "ROWNO": 0,
+      "GROUPID": 0,
+    };
+    jsonBody = json.encode(body);
+
+    // you can replace your api link with this link
+    response = await
+    http.post(Uri.parse(AppConfig.BASE_API_URL+'Fetch_SelfStudy.php'),
+        body: jsonBody,
+        headers: {'Accept': 'application/json', 'Content-Type': 'application/json',}
+    );
+    if (response.statusCode == 200) {
+      print("--------------------Home : ${response.body}");
+      List<dynamic> jsonData = json.decode(response.body);
+      print("--------------------Home : ${jsonData}");
+      setState(() {
+        QuestionAnswer = jsonData.map((data) => QAnsModel.fromJson(data)).toList();
+      });
+      //-------------------Ans
+      print("--------------------Home QuestionAnswer[0].id : ${QuestionAnswer[0].id}");
+      List<QAnsModel> TempQuestionAnswer = [];
+      body = {
+        "ACTION": "36",
+        "ROWNO": 0,
+        "GROUPID": 0,
+        "QID": QuestionAnswer[0].id,
+      };
+      jsonBody = json.encode(body);
+
+      // you can replace your api link with this link
+      response = await
+      http.post(Uri.parse(AppConfig.BASE_API_URL + 'Fetch_SelfStudy.php'),
+          body: jsonBody,
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          }
+      );
+      if (response.statusCode == 200) {
+        print(
+            "---->>>>>>>>>>>>>>>>>>-----Answer------------------------------------- : ${response
+                .body}");
+        List<dynamic> jsonData1 = json.decode(response.body);
+        print(
+            "---->>>>>>>>>>>>>>>>>>-----Answer------------------------------------- : ${jsonData}");
+        for (var h in jsonData1) {
+          QAnsModel authTitle = new QAnsModel(id: int.parse(h['id']),
+              Qid: int.parse(h['ques_id']),
+              Name: h['name'],
+              Date: h['date'],
+              Time: h['time'],
+              UserText: h['user_text']);
+          QuestionAnswer.add(authTitle);
+          print(
+              "---->>>>>>>>>>>>>>>>>>-----Answer------------------------------------- : ${QuestionAnswer
+                  .length}");
+        }
+      } else {
+        // Handle error if needed
+      }
     } else {
       // Handle error if needed
     }
@@ -136,6 +210,7 @@ class CreateHomePage extends State<Home>{
   @override
   Widget build(BuildContext context) {
     final double W = MediaQuery.of(context).size.width;
+    final double DH = MediaQuery.of(context).size.height;
     print("----------------------------------------W : ${W}");
     return Scaffold(
       body: RefreshIndicator(
@@ -260,6 +335,52 @@ class CreateHomePage extends State<Home>{
                   ),
                 ),
 
+                SliverToBoxAdapter(
+                    child: QuestionAnswer.length >0 ? Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.fromLTRB(5, 10, 0, 0),
+                          alignment: Alignment.bottomLeft,
+                          child: Text('Question/Answer',
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(5, 8, 5, 0),
+                          alignment: Alignment.bottomLeft,
+                          child: QuestionAnswer.length >0 ? Text('Q.: ${ QuestionAnswer[0].UserText.substring(0, 150)}...',
+                            style: TextStyle(fontSize: 16,
+                              color: Colors.white),) : null,
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(5, 8, 5, 0),
+                          alignment: Alignment.bottomLeft,
+                          child: QuestionAnswer.length >1 ? Text('A.: ${QuestionAnswer[1].UserText.substring(0, 150)}...',
+                            style: TextStyle(fontSize: 16,
+                                color: Colors.black),) : null,
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(W * 0.8, 8, 10, 0),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(20)
+                          ),
+                          child: GestureDetector(
+                            onTap: (){
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      QuestionAnswerList()
+                              ));
+                            },
+                            child: QuestionAnswer.length >0 ? Text('All...',
+                              style: TextStyle(fontSize: 20,
+                                  color: Colors.white),) : null,
+                          )
+                        ),
+                      ],
+                    ): null,
+                ),
+
         SliverToBoxAdapter(
           child: Column(
             children: [
@@ -317,9 +438,8 @@ class CreateHomePage extends State<Home>{
                                 color: Colors.blue,
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              margin: EdgeInsets.fromLTRB(0, 5, 5, 0),
+                              margin: EdgeInsets.fromLTRB(W * 0.7, 5, 8, 0),
                               alignment: Alignment.center,
-                              width: W > 400 ? 100 : 115,
                             child: GestureDetector(
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
@@ -404,5 +524,8 @@ class CreateHomePage extends State<Home>{
     );
 
   }//build
+
+//----------------------------------------------------------
+
 
 }//CreateHomePage
