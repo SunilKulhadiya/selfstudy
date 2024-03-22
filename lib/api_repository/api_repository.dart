@@ -53,32 +53,32 @@ class ApiRepository {
     }
   }
   //---------------------------------------
-  Future<void> SaveNotification(String NN) async {
-    prefs = await SharedPreferences.getInstance();
-    UserID = (prefs.getInt('Userid') == null ? 0 : prefs.getInt('Userid'))!;
-
-    var body = {
-      "ACTION": 34,
-      "ROWNO": 0,
-      "GROUPID": UserID,
-      "DEVICETOKEN": NN,
-    };
-    var jsonBody = json.encode(body);
-
-    // you can replace your api link with this link
-    var response = await
-    http.post(Uri.parse(AppConfig.BASE_API_URL + 'Fetch_SelfStudy.php'),
-        body: jsonBody,
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        }
-    );
-    print("--------------------Save server response : ${response.body} --------------------------Token");
-    if (response.statusCode == 200) {
-      print("--------------------Save server response : ${response.body}");
-      List<dynamic> jsonData = json.decode(response.body);
-      }
-  }
+  // Future<void> SaveNotification(String NN) async {
+  //   prefs = await SharedPreferences.getInstance();
+  //   UserID = (prefs.getInt('Userid') == null ? 0 : prefs.getInt('Userid'))!;
+  //
+  //   var body = {
+  //     "ACTION": 34,
+  //     "ROWNO": 0,
+  //     "GROUPID": UserID,
+  //     "DEVICETOKEN": NN,
+  //   };
+  //   var jsonBody = json.encode(body);
+  //
+  //   // you can replace your api link with this link
+  //   var response = await
+  //   http.post(Uri.parse(AppConfig.BASE_API_URL + 'Fetch_SelfStudy.php'),
+  //       body: jsonBody,
+  //       headers: {
+  //         'Accept': 'application/json',
+  //         'Content-Type': 'application/json',
+  //       }
+  //   );
+  //   print("--------------------Save server response : ${response.body} --------------------------Token");
+  //   if (response.statusCode == 200) {
+  //     print("--------------------Save server response : ${response.body}");
+  //     List<dynamic> jsonData = json.decode(response.body);
+  //     }
+  // }
   //------------------------
 }

@@ -3,6 +3,7 @@ import 'dart:ffi';
 class QAnsModel {
   final int id;
   final int Qid;
+  final int UserID;
   final String Name;
   final String Date;
   final String Time;
@@ -11,6 +12,7 @@ class QAnsModel {
   QAnsModel({
     required this.id,
     required this.Qid,
+    required this.UserID,
     required this.Name,
     required this.Date,
     required this.Time,
@@ -21,6 +23,7 @@ class QAnsModel {
     return QAnsModel(
       id: int.parse(json['id']),
       Qid: int.parse(json['ques_id']),
+      UserID: int.parse(json['user_id']),
       Name: json['name'],
       Date: json['date'],
       Time: json['time'],

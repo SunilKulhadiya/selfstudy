@@ -14,10 +14,10 @@ class FirebaseApi {
 
   final firebaseMessaging = FirebaseMessaging.instance;
 
-  Future<void> SendNotification() async {
+  Future<void> SendNotification(String MTitle, String MBody, String UToken) async {
     var serverKey =
         'AAAAHuhBdvg:APA91bHo5p3fkB8U9NYQZWgit4mIdgiAfJHqQnNqHla8pa1zIDar9JGQ7Hn5H0wK4sf0b3t3AECG1uyyWQBoEJ-A7XwQzb6Hk3xss2xgqNNVdhOL-2HtUSBtRGrT_evm5gAjUGcdbPfy';
-    var UToken = "eiYWbzriRSagaZI49L9qST:APA91bGqc9mcgQYlWGWh2OLRwj8NQ7jerGURhblB6ObSHZYWVRLOeKc3tkpM1XR13VxzVnWBsEoPcLXPtxIznWmeyqxUosbuJmR3f3uhuh_qTk25twZ7OF_09FjBoB0w7K-Lm5z-NLat";
+    //var UToken = "eiYWbzriRSagaZI49L9qST:APA91bGqc9mcgQYlWGWh2OLRwj8NQ7jerGURhblB6ObSHZYWVRLOeKc3tkpM1XR13VxzVnWBsEoPcLXPtxIznWmeyqxUosbuJmR3f3uhuh_qTk25twZ7OF_09FjBoB0w7K-Lm5z-NLat";
     try {
         http.Response response = await http.post(
           Uri.parse('https://fcm.googleapis.com/fcm/send'),
@@ -28,8 +28,8 @@ class FirebaseApi {
           body: jsonEncode(
             <String, dynamic>{
               'notification': <String, dynamic>{
-                'body': 'this is a skand body',
-                'title': 'this is a title'
+                'body': MBody,
+                'title': MTitle
               },
               'priority': 'high',
               'data': <String, dynamic>{

@@ -225,12 +225,14 @@ class CreateSList extends State<UserProfile> {
           ServerRespons =
               jsonData.map((data) => DataResponseModel.fromJson(data)).toList();
           ServerMessage = ServerRespons[0].Response;
-          ServerRespons = [];
         });
-        if(ServerRespons[0].Response == "Successfully Submited" && action == 26) {
+        if((ServerRespons[0].Response == "Successfully Submited" ||
+            ServerRespons[0].Response == "Successfully updated") && action == 26) {
           UserID = int.parse(ServerRespons[0].Code);
           prefs.setInt('Userid', UserID);
         }
+        print("----------->>>>>>>>>>>>>>>>>>>>>>>>>>>---------TEXTUSERNAME : ${TEXTUSERNAME}");
+        prefs.setString('UserName', TEXTUSERNAME);
 
         print("--------------------sub group : ${jsonData}");
 
@@ -243,6 +245,7 @@ class CreateSList extends State<UserProfile> {
           //   // SelectedSubGrpName = SubGroupDataModel(SubGrpID: "0",
           //   //     SubGrpName: "Select Title");
           // });
+          ServerRespons = [];
         });
       }
       //-------

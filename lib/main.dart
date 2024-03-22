@@ -26,7 +26,7 @@ Future<void> BackGHandle(RemoteMessage message) async {
   print("------------------------------------Body : ${message.notification!.body}");
   print("------------------------------------Payload : ${message.data}");
 
-  ApiRepository().SaveNotification(message.data as String);
+  //ApiRepository().SaveNotification(message.data as String);
 }
 void ForgroundfirebaseMessagingListener() {
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -36,7 +36,7 @@ void ForgroundfirebaseMessagingListener() {
     print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Message: ${message.notification!.body}');
 
     //Notif = jsonEncode(message.toMap());
-    ApiRepository().SaveNotification(jsonEncode(message.toMap()));
+    //ApiRepository().SaveNotification(jsonEncode(message.toMap()));
   });
 }
 

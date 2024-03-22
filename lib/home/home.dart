@@ -19,6 +19,7 @@ import 'package:selfstudy/module/ques_ans_model.dart';
 import 'package:selfstudy/image_viewer/image_view_zoom.dart';
 import 'package:selfstudy/home/question_answer.dart';
 
+String UserName = "";
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -42,6 +43,9 @@ class CreateHomePage extends State<Home>{
     fetchProducts();
   }
   Future<void> fetchProducts() async {
+    prefs = await SharedPreferences.getInstance();
+    UserName = (prefs.getString('UserName') == null ? "" : prefs.getString('UserName'))!;
+print("??????????????????????????????????????? UserName : ${UserName}");
     var body = {
       "ACTION": "0",
       "ROWNO": 0,
@@ -121,50 +125,50 @@ class CreateHomePage extends State<Home>{
         body: jsonBody,
         headers: {'Accept': 'application/json', 'Content-Type': 'application/json',}
     );
+    print("--------------------Action 35  ----------------------------------------------------------------------------------");
     if (response.statusCode == 200) {
-      print("--------------------Home : ${response.body}");
+      print("--------------------Action 35  : ${response.body}");
       List<dynamic> jsonData = json.decode(response.body);
-      print("--------------------Home : ${jsonData}");
+      print("---------------Action 35 -----Home : ${jsonData}");
       setState(() {
         QuestionAnswer = jsonData.map((data) => QAnsModel.fromJson(data)).toList();
       });
       //-------------------Ans
       print("--------------------Home QuestionAnswer[0].id : ${QuestionAnswer[0].id}");
       List<QAnsModel> TempQuestionAnswer = [];
-      body = {
+      var body3 = {
         "ACTION": "36",
         "ROWNO": 0,
         "GROUPID": 0,
         "QID": QuestionAnswer[0].id,
       };
-      jsonBody = json.encode(body);
+      var jsonBody3 = json.encode(body3);
 
       // you can replace your api link with this link
-      response = await
+      var response3 = null;
+      response3 = await
       http.post(Uri.parse(AppConfig.BASE_API_URL + 'Fetch_SelfStudy.php'),
-          body: jsonBody,
+          body: jsonBody3,
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
           }
       );
-      if (response.statusCode == 200) {
-        print(
-            "---->>>>>>>>>>>>>>>>>>-----Answer------------------------------------- : ${response
-                .body}");
-        List<dynamic> jsonData1 = json.decode(response.body);
-        print(
-            "---->>>>>>>>>>>>>>>>>>-----Answer------------------------------------- : ${jsonData}");
-        for (var h in jsonData1) {
+      if (response3.statusCode == 200) {
+        print("---->>>>>>>>>>>>>>>>>>-----Answer---------------------------------body---- : ${response3.body}");
+        List<dynamic> jsonData3 = json.decode(response3.body);
+        print("---->>>>>>>>>>>>>>>>>>-----Answer-----------------------------------QA-- : ${jsonData3}");
+        print("---->>>>>>>>>>>>>>>>>>-----Answer-------length----------------------------QA-- : ${jsonData3.length}");
+        for (var h in jsonData3) {
           QAnsModel authTitle = new QAnsModel(id: int.parse(h['id']),
               Qid: int.parse(h['ques_id']),
+              UserID: int.parse(h['user_id']),
               Name: h['name'],
               Date: h['date'],
               Time: h['time'],
               UserText: h['user_text']);
           QuestionAnswer.add(authTitle);
-          print(
-              "---->>>>>>>>>>>>>>>>>>-----Answer------------------------------------- : ${QuestionAnswer
+          print("---->>>>>>>>>>>>>>>>>>-----Answer------------------------------------- : ${QuestionAnswer
                   .length}");
         }
       } else {
@@ -305,6 +309,12 @@ class CreateHomePage extends State<Home>{
                                           ),
                                         ),
                                         onTap: () {
+                                          if(UserName.length <3) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                                SnackBar(content: Text(
+                                                    'Register profile for more better services...')));
+                                          }
                                           Navigator.of(context).push(MaterialPageRoute(
                                               builder: (context) =>
                                                   Image_View_Zoom(CaroUselData: CaroUselData,
@@ -347,16 +357,40 @@ class CreateHomePage extends State<Home>{
                         Container(
                           margin: EdgeInsets.fromLTRB(5, 8, 5, 0),
                           alignment: Alignment.bottomLeft,
-                          child: QuestionAnswer.length >0 ? Text('Q.: ${ QuestionAnswer[0].UserText.substring(0, 150)}...',
-                            style: TextStyle(fontSize: 16,
-                              color: Colors.white),) : null,
+                          child: GestureDetector(
+                            onTap: (){
+                              if(UserName.length <3) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(
+                                    SnackBar(content: Text(
+                                        'Register profile for more better services...')));
+                              }
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      QuestionAnswerList()
+                              ));
+                            },
+                            child: QuestionAnswer.length >0 ? Text('Q.: ${ QuestionAnswer[0].UserText.substring(0, QuestionAnswer[0].UserText.length > 150 ? 150 : QuestionAnswer[0].UserText.length)}...',
+                              style: TextStyle(fontSize: 16,
+                                  color: Colors.white),) : null,
+                          )
                         ),
                         Container(
                           margin: EdgeInsets.fromLTRB(5, 8, 5, 0),
                           alignment: Alignment.bottomLeft,
-                          child: QuestionAnswer.length >1 ? Text('A.: ${QuestionAnswer[1].UserText.substring(0, 150)}...',
-                            style: TextStyle(fontSize: 16,
-                                color: Colors.black),) : null,
+                          child: GestureDetector(
+                            onTap: (){
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      QuestionAnswerList()
+                              ));
+                            },
+                            child: QuestionAnswer.length >1 ?
+                              Text('A.: ${QuestionAnswer[1].UserText.substring(0,
+                                  QuestionAnswer[1].UserText.length > 150 ? 150 : QuestionAnswer[1].UserText.length)}...',
+                              style: TextStyle(fontSize: 16,
+                                  color: Colors.black),) : null,
+                          ),
                         ),
                         Container(
                           margin: EdgeInsets.fromLTRB(W * 0.8, 8, 10, 0),
@@ -367,6 +401,12 @@ class CreateHomePage extends State<Home>{
                           ),
                           child: GestureDetector(
                             onTap: (){
+                              if(UserName.length <3) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(
+                                    SnackBar(content: Text(
+                                        'Register profile for more better services...')));
+                              }
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) =>
                                       QuestionAnswerList()
@@ -442,6 +482,12 @@ class CreateHomePage extends State<Home>{
                               alignment: Alignment.center,
                             child: GestureDetector(
                                 onTap: () {
+                                  if(UserName.length <3) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(
+                                        SnackBar(content: Text(
+                                            'Register profile for more better services...')));
+                                  }
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) =>
                                   ShortsList(clientName: "Shorts",
@@ -489,6 +535,12 @@ class CreateHomePage extends State<Home>{
                             alignment: Alignment.center,
                           child: GestureDetector(
                           onTap: () {
+                            if(UserName.length <3) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(
+                                  SnackBar(content: Text(
+                                      'Register profile for more better services...')));
+                            }
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) =>
                                     MyPDFViewer(PdfUrl: DocData[index].Url,
