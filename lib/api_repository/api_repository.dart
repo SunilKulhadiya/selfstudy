@@ -26,7 +26,7 @@ class ApiRepository {
       "ACTION": action,
       "ROWNO": 0,
       "GROUPID": UserID,
-      "DEVICETOKEN": prefs.get('DeviceToken'),
+      "DEVICETOKEN": prefs.getString('DeviceToken'),
     };
     var jsonBody = json.encode(body);
 
@@ -41,15 +41,16 @@ class ApiRepository {
     );
     print("--------------------Save server response : ${response.body} --------------------------Token");
     if (response.statusCode == 200) {
-      print("--------------------Save server response : ${response.body}");
+      print("--------------Token------Save server response : ${response.body}");
       List<dynamic> jsonData = json.decode(response.body);
         ServerRespons =
             jsonData.map((data) => DataResponseModel.fromJson(data)).toList();
-      if(ServerRespons[0].Response == "Successfully Submited" && action == 32) {
+      if(ServerRespons[0].Response == "Successfully Submitted") {
+        print("---------------Change User id------------Token------------------------sub group : ${jsonData}");
         UserID = int.parse(ServerRespons[0].Code);
         prefs.setInt('Userid', UserID);
       }
-      print("--------------------sub group : ${jsonData}");
+      print("-------------------Token------------------------sub group : ${jsonData}");
     }
   }
   //---------------------------------------

@@ -50,9 +50,9 @@ Future<void> main() async {
   }catch(e){
     print("*********************-----------Error : {e}");
   }
-  Future.delayed(Duration(seconds: 5), () {
-    ApiRepository().UserTokenUpdate();
-  });
+  // Future.delayed(Duration(seconds: 5), () {
+  //   ApiRepository().UserTokenUpdate();
+  // });
 
   //SendNotification();
 
