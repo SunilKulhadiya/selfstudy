@@ -48,6 +48,8 @@ class CreateSList extends State<Syllabus>{
     }
   }
   Future<void> fetchProducts() async {
+
+    print("--------Syllabus.dart---<<<<<<<<<<<<<<< AppConfig.CAROUSE_URL : ${AppConfig.CAROUSE_URL}");
     //---------------------Carousel
     var body = {
       "ACTION": "0",
@@ -59,7 +61,7 @@ class CreateSList extends State<Syllabus>{
 
     // you can replace your api link with this link
     var response = await
-    http.post(Uri.parse(AppConfig.BASE_URL + 'Fetch_SelfStudy.php'),
+    http.post(Uri.parse(AppConfig.BASE_API_URL + 'Fetch_SelfStudy.php'),
         body: jsonBody,
         headers: {
           'Accept': 'application/json',
@@ -180,7 +182,7 @@ class CreateSList extends State<Syllabus>{
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(8.0),
                                           image: DecorationImage(
-                                            image: NetworkImage(fileImage.ImgUrl),
+                                            image: NetworkImage(AppConfig.CAROUSE_URL+fileImage.ImgUrl),
                                             fit: BoxFit.fill,
                                           ),
                                         ),

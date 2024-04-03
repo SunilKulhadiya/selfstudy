@@ -93,17 +93,16 @@ class CreateSList extends State<DocumentList>{
 
     // you can replace your api link with this link
     var response = await
-    http.post(Uri.parse(AppConfig.BASE_URL + 'Fetch_SelfStudy.php'),
+    http.post(Uri.parse(AppConfig.BASE_API_URL + 'Fetch_SelfStudy.php'),
         body: jsonBody,
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         }
     );
+    print("--------------------Docu list--------------CaroUselData : ${response.body}");
     if (response.statusCode == 200) {
-      print(
-          "--------------------Docu list--------------CaroUselData : ${response
-              .body}");
+      print("--------------------Docu list--------------CaroUselData : ${response.body}");
       List<dynamic> jsonData = json.decode(response.body);
       print(
           "--------------------Docu list --------------------CaroUselData : ${jsonData}");
@@ -115,7 +114,7 @@ class CreateSList extends State<DocumentList>{
       CarouselDataModel CDM = new CarouselDataModel(id: 0,
           title: "",
           Subtitle: "",
-          ImgUrl: AppConfig.CAROUSE_URL + 'India_EtoW_NtoS_Length.jpg',
+          ImgUrl: 'India_EtoW_NtoS_Length.jpg',
           GroupName: '',
           GroupID: "0",
           SubGroupID: '0',
@@ -125,7 +124,7 @@ class CreateSList extends State<DocumentList>{
       CDM = new CarouselDataModel(id: 0,
           title: "",
           Subtitle: "",
-          ImgUrl: AppConfig.CAROUSE_URL + 'ArabSagarMeMilneBaliNadiyan.jpg',
+          ImgUrl: 'ArabSagarMeMilneBaliNadiyan.jpg',
           GroupName: '',
           GroupID: "0",
           SubGroupID: '0',
@@ -135,7 +134,7 @@ class CreateSList extends State<DocumentList>{
       CDM = new CarouselDataModel(id: 0,
           title: "",
           Subtitle: "",
-          ImgUrl: AppConfig.CAROUSE_URL + 'ArabSagarMeMilneBaliNadiyan.jpg',
+          ImgUrl: 'ArabSagarMeMilneBaliNadiyan.jpg',
           GroupName: '',
           GroupID: "0",
           SubGroupID: '0',
@@ -372,7 +371,7 @@ class CreateSList extends State<DocumentList>{
                                         borderRadius: BorderRadius.circular(8.0),
                                         color: Colors.white,
                                         image: DecorationImage(
-                                          image: NetworkImage(fileImage.ImgUrl),
+                                          image: NetworkImage(AppConfig.CAROUSE_URL+fileImage.ImgUrl),
                                           fit: BoxFit.fill,
                                         ),
                                       ),

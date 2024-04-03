@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 // import 'dart:html';
 // import 'dart:io';
@@ -29,6 +30,7 @@ class Home extends StatefulWidget {
 }
 
 class CreateHomePage extends State<Home>{
+  late Timer timer;
   late SharedPreferences prefs;
   String Notiff = "";
   List<CarouselDataModel> CaroUselData = [];
@@ -41,9 +43,13 @@ class CreateHomePage extends State<Home>{
   void initState() {
     super.initState();
     fetchProducts();
+    timer = Timer.periodic(Duration(seconds: 45), (Timer t) => fetchQuestAnswer());
   }
   Future<void> fetchProducts() async {
+    print("-------------------------------home.dart, AppConfig.BASE_API_URL : ${AppConfig.BASE_API_URL}");
     prefs = await SharedPreferences.getInstance();
+    prefs.setString("AlertNotification", "true");
+    print("-------------------------------home.dart, AlertNotification : ${prefs.getString("AlertNotification")}");
     UserName = (prefs.getString('UserName') == null ? "" : prefs.getString('UserName'))!;
 print("??????????????????????????????????????? UserName : ${UserName}");
     var body = {
@@ -70,17 +76,17 @@ print("??????????????????????????????????????? UserName : ${UserName}");
       print("-------------------Home-VDModel : ${ShortsData}");
     } else {
       CarouselDataModel CDM = new CarouselDataModel(id: 0, title: "",
-          ImgUrl: AppConfig.CAROUSE_URL+'India_EtoW_NtoS_Length.jpg',
+          ImgUrl: 'India_EtoW_NtoS_Length.jpg',
           GroupName: '', GroupID: "0", Approve: "1", Page: "0", ImgDeco: 0,
           Subtitle: "", SubGroupID: "0", UserID: 0);
       CaroUselData.add(CDM);
       CDM = new CarouselDataModel(id: 0, title: "",
-          ImgUrl: AppConfig.CAROUSE_URL+'ArabSagarMeMilneBaliNadiyan.jpg',
+          ImgUrl: 'ArabSagarMeMilneBaliNadiyan.jpg',
           GroupName: '', GroupID: "0", Approve: "1", Page: "0", ImgDeco: 0,
           Subtitle: "", SubGroupID: "0", UserID: 0);
       CaroUselData.add(CDM);
       CDM = new CarouselDataModel(id: 0, title: "",
-          ImgUrl: AppConfig.CAROUSE_URL+'ArabSagarMeMilneBaliNadiyan.jpg',
+          ImgUrl: 'ArabSagarMeMilneBaliNadiyan.jpg',
           GroupName: '', GroupID: "0", Approve: "1", Page: "0", ImgDeco: 0,
           Subtitle: "", SubGroupID: "0", UserID: 0);
       CaroUselData.add(CDM);
@@ -111,72 +117,8 @@ print("??????????????????????????????????????? UserName : ${UserName}");
     } else {
       // Handle error if needed
     }
-    //-------------------------------Question &  Answer
-    body = {
-      "ACTION": "35",
-      "ROWNO": 0,
-      "GROUPID": 0,
-    };
-    jsonBody = json.encode(body);
-
-    // you can replace your api link with this link
-    response = await
-    http.post(Uri.parse(AppConfig.BASE_API_URL+'Fetch_SelfStudy.php'),
-        body: jsonBody,
-        headers: {'Accept': 'application/json', 'Content-Type': 'application/json',}
-    );
-    print("--------------------Action 35  ----------------------------------------------------------------------------------");
-    if (response.statusCode == 200) {
-      print("--------------------Action 35  : ${response.body}");
-      List<dynamic> jsonData = json.decode(response.body);
-      print("---------------Action 35 -----Home : ${jsonData}");
-      setState(() {
-        QuestionAnswer = jsonData.map((data) => QAnsModel.fromJson(data)).toList();
-      });
-      //-------------------Ans
-      print("--------------------Home QuestionAnswer[0].id : ${QuestionAnswer[0].id}");
-      List<QAnsModel> TempQuestionAnswer = [];
-      var body3 = {
-        "ACTION": "36",
-        "ROWNO": 0,
-        "GROUPID": 0,
-        "QID": QuestionAnswer[0].id,
-      };
-      var jsonBody3 = json.encode(body3);
-
-      // you can replace your api link with this link
-      var response3 = null;
-      response3 = await
-      http.post(Uri.parse(AppConfig.BASE_API_URL + 'Fetch_SelfStudy.php'),
-          body: jsonBody3,
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          }
-      );
-      if (response3.statusCode == 200) {
-        print("---->>>>>>>>>>>>>>>>>>-----Answer---------------------------------body---- : ${response3.body}");
-        List<dynamic> jsonData3 = json.decode(response3.body);
-        print("---->>>>>>>>>>>>>>>>>>-----Answer-----------------------------------QA-- : ${jsonData3}");
-        print("---->>>>>>>>>>>>>>>>>>-----Answer-------length----------------------------QA-- : ${jsonData3.length}");
-        for (var h in jsonData3) {
-          QAnsModel authTitle = new QAnsModel(id: int.parse(h['id']),
-              Qid: int.parse(h['ques_id']),
-              UserID: int.parse(h['user_id']),
-              Name: h['name'],
-              Date: h['date'],
-              Time: h['time'],
-              UserText: h['user_text']);
-          QuestionAnswer.add(authTitle);
-          print("---->>>>>>>>>>>>>>>>>>-----Answer------------------------------------- : ${QuestionAnswer
-                  .length}");
-        }
-      } else {
-        // Handle error if needed
-      }
-    } else {
-      // Handle error if needed
-    }
+    //-------------------------------
+    fetchQuestAnswer();
     //-------------------------------
     body = {
       "ACTION": "3",
@@ -204,10 +146,99 @@ print("??????????????????????????????????????? UserName : ${UserName}");
 
   }
 
+  //-------------------------------Question &  Answer
+  Future<void> fetchQuestAnswer() async {
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>> Hello i am interval refresh--------------------------");
+    if(prefs.getString("AlertNotification") == "true") {
+      print(">>>>>>>>>>>>>>>>>>>>>>>>>> Hello i am interval refresh--------------------------");
+      var bodi = {
+        "ACTION": "35",
+        "ROWNO": 0,
+        "GROUPID": 0,
+      };
+      var jsonBodi = json.encode(bodi);
+
+      // you can replace your api link with this link
+      var responss = await
+      http.post(Uri.parse(AppConfig.BASE_API_URL + 'Fetch_SelfStudy.php'),
+          body: jsonBodi,
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          }
+      );
+      print(
+          "--------------------Action 35  ---------------------------------------------------------------------");
+      print("--------------------Action 35  : ${responss.body}");
+      if (responss.statusCode == 200) {
+        List<dynamic> jsonData = json.decode(responss.body);
+        print("---------------Action 35 -----Home : ${jsonData}");
+        setState(() {
+          QuestionAnswer =
+              jsonData.map((data) => QAnsModel.fromJson(data)).toList();
+        });
+        //-------------------Ans
+        print(
+            "--------------------Home QuestionAnswer[0].id : ${QuestionAnswer[0]
+                .id}");
+        List<QAnsModel> TempQuestionAnswer = [];
+        var body3 = {
+          "ACTION": "36",
+          "ROWNO": 0,
+          "GROUPID": 0,
+          "QID": QuestionAnswer[0].id,
+        };
+        var jsonBody3 = json.encode(body3);
+
+        // you can replace your api link with this link
+        var response3 = null;
+        response3 = await
+        http.post(Uri.parse(AppConfig.BASE_API_URL + 'Fetch_SelfStudy.php'),
+            body: jsonBody3,
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            }
+        );
+        if (response3.statusCode == 200) {
+          print(
+              "---->>>>>>>>>>>>>>>>>>-----Answer---------------------------------body---- : ${response3
+                  .body}");
+          List<dynamic> jsonData3 = json.decode(response3.body);
+          print(
+              "---->>>>>>>>>>>>>>>>>>-----Answer-----------------------------------QA-- : ${jsonData3}");
+          print(
+              "---->>>>>>>>>>>>>>>>>>-----Answer-------length----------------------------QA-- : ${jsonData3
+                  .length}");
+          for (var h in jsonData3) {
+            QAnsModel authTitle = new QAnsModel(id: int.parse(h['id']),
+                Qid: int.parse(h['ques_id']),
+                UserID: int.parse(h['user_id']),
+                Name: h['name'],
+                Date: h['date'],
+                Time: h['time'],
+                UserText: h['user_text']);
+            QuestionAnswer.add(authTitle);
+            print(
+                "---->>>>>>>>>>>>>>>>>>-----Answer------------------------------------- : ${QuestionAnswer
+                    .length}");
+          }
+        } else {
+          // Handle error if needed
+        }
+      } else {
+        // Handle error if needed
+      }
+      prefs.setString("AlertNotification", "false");
+    }
+  }
+  //-------------------------------
+
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
     MySearchValue.dispose();
+    timer?.cancel();
     super.dispose();
   }
 
@@ -303,7 +334,7 @@ print("??????????????????????????????????????? UserName : ${UserName}");
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(8.0),
                                             image: DecorationImage(
-                                              image: NetworkImage(fileImage.ImgUrl),
+                                              image: NetworkImage(AppConfig.CAROUSE_URL+fileImage.ImgUrl),
                                               fit: BoxFit.fill,
                                             ),
                                           ),
@@ -349,10 +380,44 @@ print("??????????????????????????????????????? UserName : ${UserName}");
                     child: QuestionAnswer.length >0 ? Column(
                       children: [
                         Container(
+                          width: W * 0.98,
                           margin: EdgeInsets.fromLTRB(5, 10, 0, 0),
                           alignment: Alignment.bottomLeft,
-                          child: Text('Question/Answer',
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
+                          child: Row(
+                            children: [
+                              Container(
+                                child: Text('Question/Answer',
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
+                              ),
+                              Container(
+                                  margin: EdgeInsets.fromLTRB(W * 0.27, 0, 5, 0),
+                                  width: W * 0.15,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      borderRadius: BorderRadius.circular(20)
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: (){
+                                      if(UserName.length <3) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                            SnackBar(content: Text(
+                                                'Register profile for more better services...')));
+                                      }
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (context) =>
+                                              QuestionAnswerList()
+                                      ));
+                                    },
+                                    child: QuestionAnswer.length >0 ? Text('All...',
+                                      style: TextStyle(fontSize: 20,
+                                          color: Colors.white),) : null,
+                                  )
+                              ),
+
+                            ],
+                          )
                         ),
                         Container(
                           margin: EdgeInsets.fromLTRB(5, 8, 5, 0),
@@ -370,52 +435,30 @@ print("??????????????????????????????????????? UserName : ${UserName}");
                                       QuestionAnswerList()
                               ));
                             },
-                            child: QuestionAnswer.length >0 ? Text('Q.: ${ QuestionAnswer[0].UserText.substring(0, QuestionAnswer[0].UserText.length > 150 ? 150 : QuestionAnswer[0].UserText.length)}...',
-                              style: TextStyle(fontSize: 16,
+                            child: QuestionAnswer.length >0 ?
+                              Text('Q.: ${ QuestionAnswer[0].UserText.substring(0,
+                                  QuestionAnswer[0].UserText.length > 150 ? 150 :
+                                  QuestionAnswer[0].UserText.length)}...',
+                                  style: TextStyle(fontSize: 16,
                                   color: Colors.white),) : null,
                           )
                         ),
                         Container(
                           margin: EdgeInsets.fromLTRB(5, 8, 5, 0),
                           alignment: Alignment.bottomLeft,
-                          child: GestureDetector(
+                          child: QuestionAnswer.length >1 ? GestureDetector(
                             onTap: (){
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) =>
                                       QuestionAnswerList()
                               ));
                             },
-                            child: QuestionAnswer.length >1 ?
-                              Text('A.: ${QuestionAnswer[1].UserText.substring(0,
+                            child: Text('A.: ${QuestionAnswer[1].UserText.substring(0,
                                   QuestionAnswer[1].UserText.length > 150 ? 150 : QuestionAnswer[1].UserText.length)}...',
                               style: TextStyle(fontSize: 16,
-                                  color: Colors.black),) : null,
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.fromLTRB(W * 0.8, 8, 10, 0),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(20)
-                          ),
-                          child: GestureDetector(
-                            onTap: (){
-                              if(UserName.length <3) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(
-                                    SnackBar(content: Text(
-                                        'Register profile for more better services...')));
-                              }
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      QuestionAnswerList()
-                              ));
-                            },
-                            child: QuestionAnswer.length >0 ? Text('All...',
-                              style: TextStyle(fontSize: 20,
-                                  color: Colors.white),) : null,
-                          )
+                                  color: Colors.black),),
+                          ) : Text('A.: ...', style: TextStyle(fontSize: 16,
+                                color: Colors.black),),
                         ),
                       ],
                     ): null,

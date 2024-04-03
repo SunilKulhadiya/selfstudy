@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:selfstudy/module/carousel_model.dart';
 import 'package:selfstudy/image_viewer/sub_group_images.dart';
 
+import '../app_config.dart';
+
 class Image_View_Zoom extends StatefulWidget {
   final List <CarouselDataModel> CaroUselData;
   final double ShowFirst;
@@ -68,7 +70,7 @@ class CreateSList extends State<Image_View_Zoom>{
                           ),
                           child: WidgetZoom(
                             heroAnimationTag: 'tag',
-                            zoomWidget: Image.network(widget.CaroUselData[index].ImgUrl,
+                            zoomWidget: Image.network(AppConfig.CAROUSE_URL+widget.CaroUselData[index].ImgUrl,
                               width: DW - 10, height: DH - 250, fit: BoxFit.fill,),
                           )
                       ),

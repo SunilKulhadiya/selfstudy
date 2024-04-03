@@ -379,7 +379,7 @@ class CreateSList extends State<ShortsType>{
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8.0),
                                         image: DecorationImage(
-                                          image: NetworkImage(fileImage.ImgUrl),
+                                          image: NetworkImage(AppConfig.CAROUSE_URL+fileImage.ImgUrl),
                                           fit: BoxFit.fill,
                                         ),
                                       ),

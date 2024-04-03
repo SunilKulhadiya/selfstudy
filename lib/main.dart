@@ -28,13 +28,11 @@ Future<void> BackGHandle(RemoteMessage message) async {
 
   //ApiRepository().SaveNotification(message.data as String);
 }
-void ForgroundfirebaseMessagingListener() {
+Future<void> ForgroundfirebaseMessagingListener() async {
+  late SharedPreferences prefs;
+  prefs = await SharedPreferences.getInstance();
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print("------------------------------------forground handler notification------------------------------");
-    print('Message data: ${jsonEncode(message.toMap())}');
-    print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Message: ${message.notification!.title}');
-    print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Message: ${message.notification!.body}');
-
+      prefs.setString("AlertNotification", "true");
     //Notif = jsonEncode(message.toMap());
     //ApiRepository().SaveNotification(jsonEncode(message.toMap()));
   });
